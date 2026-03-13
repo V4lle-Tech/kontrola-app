@@ -1,0 +1,51 @@
+# Labels por area
+- name: "area:auth"
+  color: "0e8a16"
+  description: "Autenticacion y login"
+
+- name: "area:recruitment"
+  color: "5319e7"
+  description: "Paginas de reclutamiento"
+
+- name: "area:documents"
+  color: "fbca04"
+  description: "Paginas de documentos"
+
+- name: "area:crm"
+  color: "bfdadc"
+  description: "Paginas de CRM"
+
+- name: "area:admin"
+  color: "1d76db"
+  description: "Panel admin"
+
+- name: "area:shared"
+  color: "006b75"
+  description: "Componentes compartidos, layouts"
+
+# Labels de prioridad
+- name: "priority:high"
+  color: "d73a4a"
+  description: "Prioridad alta"
+
+- name: "priority:medium"
+  color: "fbca04"
+  description: "Prioridad media"
+
+- name: "priority:low"
+  color: "0e8a16"
+  description: "Prioridad baja"
+
+# Labels de CI
+- name: "ci-failure"
+  color: "b60205"
+  description: "Fallo en CI (lint, type-check, build)"
+
+# Labels de estado
+- name: "blocked"
+  color: "d93f0b"
+  description: "Bloqueado por dependencia (API)"
+
+- name: "needs-review"
+  color: "fbca04"
+  description: "Necesita revision"
