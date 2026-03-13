@@ -115,29 +115,49 @@ const api = new CandidateApi();
 const { data } = await api.getCandidates();
 ```
 
-### 6. Auth: JWT en Pinia store
+### 6. Auth: JWT en Pinia store (token en memoria, NUNCA localStorage)
 
 ```typescript
 // stores/auth.ts
 export const useAuthStore = defineStore('auth', () => {
-    const token = ref<string | null>(localStorage.getItem('token'));
+    const accessToken = ref<string | null>(null); // Solo en memoria
     const user = ref<User | null>(null);
+    const isAuthenticated = computed(() => !!accessToken.value);
 
     async function login(credentials: LoginRequest) {
         const { data } = await AuthApi.login(credentials);
-        token.value = data.accessToken;
-        localStorage.setItem('token', data.accessToken);
+        accessToken.value = data.accessToken;
+        user.value = data.user;
+        scheduleRefresh(data.expiresIn);
+    }
+
+    async function refreshSession() {
+        // Refresh token viaja en HttpOnly cookie (seguro contra XSS)
+        const { data } = await AuthApi.refresh();
+        accessToken.value = data.accessToken;
+        scheduleRefresh(data.expiresIn);
     }
 
     function logout() {
-        token.value = null;
+        accessToken.value = null;
         user.value = null;
-        localStorage.removeItem('token');
+        AuthApi.logout(); // Invalida refresh cookie en servidor
     }
 
-    return { token, user, login, logout };
+    return { accessToken, user, isAuthenticated, login, refreshSession, logout };
 });
 ```
+
+## Documentación
+
+| Guía                                   | Contenido                                |
+| -------------------------------------- | ---------------------------------------- |
+| `docs/guides/vue3-best-practices.md`   | Anti-patrones, TypeScript, rendimiento   |
+| `docs/guides/component-patterns.md`    | Taxonomía, composición, formularios      |
+| `docs/guides/pinia-stores.md`          | Arquitectura stores, auth, testing       |
+| `docs/guides/api-client.md`            | HTTP layer, OpenAPI, errores RFC 9457    |
+| `docs/guides/testing-strategy.md`      | Vitest, Vue Test Utils, MSW              |
+| `.claude/rules/architecture-constraints.md` | 15 restricciones binarias           |
 
 ## Fase del Proyecto
 

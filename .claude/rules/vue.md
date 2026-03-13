@@ -13,6 +13,17 @@
 
 **NO usar**: shadcn-vue, reka-ui, radix-vue, lucide-vue-next, vue-sonner, class-variance-authority, clsx, tailwind-merge.
 
+## Guias Detalladas
+
+| Guía | Contenido |
+|------|-----------|
+| `docs/guides/vue3-best-practices.md` | Anti-patrones PHP→SPA, TypeScript estricto, rendimiento |
+| `docs/guides/component-patterns.md` | Taxonomía, composición, DataTable, formularios |
+| `docs/guides/pinia-stores.md` | Setup stores, auth JWT, testing, anti-patrones |
+| `docs/guides/api-client.md` | HTTP layer, OpenAPI client, errores RFC 9457 |
+| `docs/guides/testing-strategy.md` | Vitest, Vue Test Utils, MSW, factories |
+| `.claude/rules/architecture-constraints.md` | 15 restricciones binarias |
+
 ---
 
 ## Reglas Criticas
@@ -120,42 +131,46 @@ const emit = defineEmits<{
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue';
-import { CandidateApi } from '@/api/generated';
+import { useRecruitmentApi } from '@/composables/api/useRecruitmentApi';
 import { useToast } from 'primevue/usetoast';
+import type { ApiError } from '@/types/api';
 
 const toast = useToast();
-const loading = ref(false);
+const { createCandidate, loading, error } = useRecruitmentApi();
+
 const form = ref({
     givenName: '',
     paternalName: '',
     email: '',
 });
-const errors = ref<Record<string, string>>({});
+const fieldErrors = ref<Record<string, string[]>>({});
 
 async function submit() {
-    loading.value = true;
-    errors.value = {};
+    fieldErrors.value = {};
     try {
-        await CandidateApi.store(form.value);
+        await createCandidate(form.value);
         toast.add({ severity: 'success', summary: 'Guardado', life: 3000 });
-    } catch (e: any) {
-        if (e.response?.status === 422) {
-            errors.value = e.response.data.errors;
+    } catch (e: unknown) {
+        const apiError = e as ApiError;
+        if (apiError.status === 422 && apiError.errors) {
+            fieldErrors.value = apiError.errors;
+        } else {
+            toast.add({ severity: 'error', summary: apiError.title ?? 'Error', life: 5000 });
         }
-    } finally {
-        loading.value = false;
     }
 }
 </script>
 
 <template>
     <form @submit.prevent="submit">
-        <InputText v-model="form.givenName" :invalid="!!errors.givenName" />
-        <small v-if="errors.givenName" class="text-red-500">{{ errors.givenName }}</small>
+        <InputText v-model="form.givenName" :invalid="!!fieldErrors.givenName" />
+        <small v-if="fieldErrors.givenName" class="p-error">{{ fieldErrors.givenName[0] }}</small>
         <Button type="submit" :loading="loading" label="Guardar" />
     </form>
 </template>
 ```
+
+> Ver `docs/guides/api-client.md` para tipado completo de errores RFC 9457.
 
 ### 9. Iconos
 
