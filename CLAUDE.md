@@ -107,13 +107,23 @@ const router = useRouter();
 router.push({ name: 'candidates.show', params: { id } });
 ```
 
-### 5. API calls: Generated client
+### 5. API calls: Generated client + Client-generated IDs
 
 ```typescript
 import { CandidateApi } from '@/api/generated';
+import { generateId } from '@/utils/uuid';
+
+// Read
 const api = new CandidateApi();
 const { data } = await api.getCandidates();
+
+// Create (PUT with client-generated UUIDv7)
+const id = generateId();
+await api.upsertCandidate(id, candidateData); // PUT /candidates/{id}
 ```
+
+**Resource creation uses PUT** (not POST). Frontend generates UUIDv7 IDs optimized for SQL Server.
+See `docs/guides/api-client.md` § 3.1 for the `generateId()` implementation.
 
 ### 6. Auth: JWT en Pinia store (token en memoria, NUNCA localStorage)
 
