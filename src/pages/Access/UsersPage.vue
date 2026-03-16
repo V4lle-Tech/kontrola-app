@@ -2,26 +2,12 @@
 import { ref, computed } from 'vue'
 import AppLayout from '@/layouts/AppLayout.vue'
 import Button from 'primevue/button'
-import { useAccessApi } from '@/composables/api/useAccessApi'
+import UsersList from '@/components/access/UsersList.vue'
 import type { UserSummary } from '@/types/access'
-import type { PaginatedResponse } from '@/types/pagination'
 
-const api = useAccessApi()
-
-const users = ref<PaginatedResponse<UserSummary> | null>(null)
 const selectedUser = ref<UserSummary | null>(null)
-const loading = ref(false)
 
 const showDetail = computed(() => selectedUser.value !== null)
-
-async function loadUsers(page = 1, search = '') {
-  loading.value = true
-  try {
-    users.value = await api.getUsers({ page, pageSize: 25, search })
-  } finally {
-    loading.value = false
-  }
-}
 
 function selectUser(user: UserSummary) {
   selectedUser.value = user
@@ -30,8 +16,6 @@ function selectUser(user: UserSummary) {
 function clearSelection() {
   selectedUser.value = null
 }
-
-void loadUsers()
 </script>
 
 <template>
@@ -42,43 +26,10 @@ void loadUsers()
         class="w-full shrink-0 border-r border-surface lg:w-[380px]"
         :class="showDetail ? 'hidden lg:flex lg:flex-col' : 'flex flex-col'"
       >
-        <!-- Header de lista -->
-        <div class="flex items-center justify-between border-b border-surface px-4 py-3">
-          <h2 class="text-lg font-semibold text-color">Usuarios</h2>
-          <Button icon="pi pi-plus" label="Nuevo" size="small" />
-        </div>
-
-        <!-- Lista de usuarios -->
-        <div class="flex-1 overflow-y-auto">
-          <div v-if="loading" class="flex items-center justify-center py-8">
-            <i class="pi pi-spin pi-spinner text-2xl text-muted-color" />
-          </div>
-          <div v-else-if="!users?.items.length" class="py-8 text-center text-muted-color">
-            <i class="pi pi-users mb-2 text-3xl" />
-            <p>No hay usuarios</p>
-          </div>
-          <ul v-else>
-            <li
-              v-for="user in users.items"
-              :key="user.id"
-              class="cursor-pointer border-b border-surface px-4 py-3 transition-colors hover:bg-surface-100 dark:hover:bg-surface-800"
-              :class="selectedUser?.id === user.id ? 'bg-primary/10' : ''"
-              @click="selectUser(user)"
-            >
-              <p class="font-medium text-color">{{ user.fullName }}</p>
-              <p class="text-sm text-muted-color">{{ user.email }}</p>
-              <div class="mt-1 flex gap-1">
-                <span
-                  v-for="role in user.roles"
-                  :key="role.id"
-                  class="rounded-full bg-surface-100 dark:bg-surface-800 px-2 py-0.5 text-xs text-muted-color"
-                >
-                  {{ role.name }}
-                </span>
-              </div>
-            </li>
-          </ul>
-        </div>
+        <UsersList
+          :selected-id="selectedUser?.id ?? null"
+          @select="selectUser"
+        />
       </div>
 
       <!-- Panel derecho: Detalle -->
@@ -96,7 +47,7 @@ void loadUsers()
           <h2 class="text-lg font-semibold text-color">{{ selectedUser?.fullName }}</h2>
         </div>
 
-        <!-- Detail content placeholder (F3-04 will replace) -->
+        <!-- Detail content (F3-04 will enhance) -->
         <div class="flex-1 overflow-y-auto p-4">
           <div class="rounded-xl border border-surface bg-surface-0 dark:bg-surface-900 p-6">
             <div class="mb-4 flex items-center gap-3">
