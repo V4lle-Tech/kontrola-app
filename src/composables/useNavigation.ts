@@ -61,6 +61,9 @@ const menuSections: MenuSection[] = [
     items: [
       { label: 'Perfil', icon: 'pi pi-cog', to: '/settings/profile' },
       { label: 'Empresa', icon: 'pi pi-building-columns', to: '/settings/business', permission: 'settings.view' },
+      { label: 'API Keys', icon: 'pi pi-key', to: '/settings/api-keys', permission: 'settings.manage' },
+      { label: 'Módulos', icon: 'pi pi-th-large', to: '/settings/modules', permission: 'settings.manage' },
+      { label: 'Importar', icon: 'pi pi-upload', to: '/settings/import', permission: 'candidates.manage' },
     ],
   },
 ]

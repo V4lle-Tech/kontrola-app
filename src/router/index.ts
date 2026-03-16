@@ -172,6 +172,24 @@ const appRoutes: RouteRecordRaw[] = [
     component: () => import('@/pages/Settings/BusinessPage.vue'),
     meta: { requiresAuth: true, permission: 'settings.view' },
   },
+  {
+    path: '/settings/api-keys',
+    name: 'api-keys',
+    component: () => import('@/pages/Settings/ApiKeysPage.vue'),
+    meta: { requiresAuth: true, permission: 'settings.manage' },
+  },
+  {
+    path: '/settings/modules',
+    name: 'modules',
+    component: () => import('@/pages/Settings/ModulesPage.vue'),
+    meta: { requiresAuth: true, permission: 'settings.manage' },
+  },
+  {
+    path: '/settings/import',
+    name: 'bulk-import',
+    component: () => import('@/pages/Settings/BulkImportPage.vue'),
+    meta: { requiresAuth: true, permission: 'candidates.manage' },
+  },
 ]
 
 const adminRoutes: RouteRecordRaw[] = [
