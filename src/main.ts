@@ -51,3 +51,8 @@ app.use(ToastService)
 app.use(ConfirmationService)
 
 app.mount('#app')
+
+// Initialize theme from persisted preference
+import { usePreferencesStore } from './stores/usePreferencesStore'
+const preferences = usePreferencesStore()
+preferences.initThemeListener()
