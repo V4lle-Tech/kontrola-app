@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
+import { useAuthStore } from '@/stores/useAuthStore'
 
 const guestRoutes: RouteRecordRaw[] = [
   {
@@ -127,17 +128,24 @@ const router = createRouter({
   routes: [...guestRoutes, ...appRoutes, ...adminRoutes],
 })
 
-// Auth guard placeholder — will be implemented in Phase 1 (F1-07)
+// Auth guard — redirects based on authentication state
 router.beforeEach((to) => {
-  const requiresAuth = to.meta.requiresAuth as boolean | undefined
+  const auth = useAuthStore()
 
-  // TODO(F1-07): Check auth store for token, redirect to login if not authenticated
-  // TODO(F1-07): If authenticated and visiting guest page, redirect to dashboard
-  // TODO(F2-03): Check permissions via usePermissions() composable
+  const requiresAuth = to.meta.requiresAuth !== false
+  const isGuestOnly = to.meta.requiresAuth === false
 
-  if (requiresAuth) {
-    // Placeholder: allow all for now
+  // Unauthenticated user trying to access protected route → login
+  if (requiresAuth && !auth.isAuthenticated) {
+    return { name: 'login', query: { redirect: to.fullPath } }
   }
+
+  // Authenticated user trying to access guest-only page (login, register) → dashboard
+  if (isGuestOnly && auth.isAuthenticated) {
+    return { name: 'dashboard' }
+  }
+
+  // TODO(F2-03): Check permissions via usePermissions() composable
 
   return true
 })
