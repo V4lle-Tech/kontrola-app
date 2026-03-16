@@ -27,6 +27,7 @@ const menuSections: MenuSection[] = [
       { label: 'Etiquetas', icon: 'pi pi-tags', to: '/recruitment/tags', permission: 'tags.view' },
       { label: 'Procesos', icon: 'pi pi-sitemap', to: '/recruitment/selection-processes', permission: 'selection-processes.view' },
       { label: 'Pipeline', icon: 'pi pi-arrow-right-arrow-left', to: '/recruitment/pipeline', permission: 'pipeline.view' },
+      { label: 'Saltos de Etapa', icon: 'pi pi-forward', to: '/recruitment/skip-requests', permission: 'pipeline.manage' },
     ],
   },
   {

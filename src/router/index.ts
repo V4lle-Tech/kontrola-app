@@ -74,6 +74,12 @@ const appRoutes: RouteRecordRaw[] = [
     component: () => import('@/pages/Recruitment/PipelinePage.vue'),
     meta: { requiresAuth: true, permission: 'pipeline.view' },
   },
+  {
+    path: '/recruitment/skip-requests',
+    name: 'skip-requests',
+    component: () => import('@/pages/Recruitment/StageSkipRequestsPage.vue'),
+    meta: { requiresAuth: true, permission: 'pipeline.manage' },
+  },
 
   // Documents
   {
