@@ -194,9 +194,51 @@ const appRoutes: RouteRecordRaw[] = [
 
 const adminRoutes: RouteRecordRaw[] = [
   {
+    path: '/admin/login',
+    name: 'admin.login',
+    component: () => import('@/pages/Admin/AdminLoginPage.vue'),
+    meta: { layout: 'guest', requiresAuth: false },
+  },
+  {
     path: '/admin',
     name: 'admin.dashboard',
     component: () => import('@/pages/Admin/AdminDashboardPage.vue'),
+    meta: { layout: 'admin', requiresAuth: true, requiresAdmin: true },
+  },
+  {
+    path: '/admin/tenants',
+    name: 'admin.tenants',
+    component: () => import('@/pages/Admin/TenantsPage.vue'),
+    meta: { layout: 'admin', requiresAuth: true, requiresAdmin: true },
+  },
+  {
+    path: '/admin/users',
+    name: 'admin.users',
+    component: () => import('@/pages/Admin/AdminUsersPage.vue'),
+    meta: { layout: 'admin', requiresAuth: true, requiresAdmin: true },
+  },
+  {
+    path: '/admin/billing',
+    name: 'admin.billing',
+    component: () => import('@/pages/Admin/BillingPage.vue'),
+    meta: { layout: 'admin', requiresAuth: true, requiresAdmin: true },
+  },
+  {
+    path: '/admin/plans',
+    name: 'admin.plans',
+    component: () => import('@/pages/Admin/PlansPage.vue'),
+    meta: { layout: 'admin', requiresAuth: true, requiresAdmin: true },
+  },
+  {
+    path: '/admin/activity',
+    name: 'admin.activity',
+    component: () => import('@/pages/Admin/ActivityLogsPage.vue'),
+    meta: { layout: 'admin', requiresAuth: true, requiresAdmin: true },
+  },
+  {
+    path: '/admin/impersonation',
+    name: 'admin.impersonation',
+    component: () => import('@/pages/Admin/ImpersonationLogsPage.vue'),
     meta: { layout: 'admin', requiresAuth: true, requiresAdmin: true },
   },
 ]
