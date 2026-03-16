@@ -1,6 +1,15 @@
 import { computed } from 'vue'
 import { useAuthStore } from '@/stores/useAuthStore'
-import type { MenuSection } from '@/types/navigation'
+import type { MenuItem, MenuSection } from '@/types/navigation'
+
+export interface ResolvedMenuItem extends MenuItem {
+  locked: boolean
+}
+
+export interface ResolvedMenuSection {
+  label: string
+  items: ResolvedMenuItem[]
+}
 
 const menuSections: MenuSection[] = [
   {
@@ -50,17 +59,15 @@ const menuSections: MenuSection[] = [
 export function useNavigation() {
   const auth = useAuthStore()
 
-  const filteredSections = computed(() => {
-    return menuSections
-      .map((section) => ({
-        ...section,
-        items: section.items.filter((item) => {
-          if (!item.permission) return true
-          return auth.checkPermission(item.permission)
-        }),
-      }))
-      .filter((section) => section.items.length > 0)
+  const sections = computed<ResolvedMenuSection[]>(() => {
+    return menuSections.map((section) => ({
+      ...section,
+      items: section.items.map((item) => ({
+        ...item,
+        locked: item.permission ? !auth.checkPermission(item.permission) : false,
+      })),
+    }))
   })
 
-  return { sections: filteredSections }
+  return { sections }
 }

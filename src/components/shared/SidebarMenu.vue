@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import type { MenuSection } from '@/types/navigation'
+import type { ResolvedMenuSection } from '@/composables/useNavigation'
 
 defineProps<{
-  sections: MenuSection[]
+  sections: ResolvedMenuSection[]
   collapsed: boolean
 }>()
 
@@ -31,8 +31,20 @@ function isActive(to: string): boolean {
 
       <ul class="flex flex-col gap-0.5">
         <li v-for="item in section.items" :key="item.label">
+          <!-- Locked item -->
+          <div
+            v-if="item.locked"
+            class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm cursor-not-allowed opacity-50"
+            :title="collapsed ? `${item.label} (bloqueado)` : 'Sin permiso'"
+          >
+            <i :class="item.icon" class="text-base text-muted-color" />
+            <span v-if="!collapsed" class="flex-1 text-muted-color">{{ item.label }}</span>
+            <i v-if="!collapsed" class="pi pi-lock text-xs text-muted-color" />
+          </div>
+
+          <!-- Accessible item -->
           <router-link
-            v-if="item.to"
+            v-else-if="item.to"
             :to="item.to"
             class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors"
             :class="
