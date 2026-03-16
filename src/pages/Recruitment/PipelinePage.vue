@@ -7,8 +7,9 @@ import AppLayout from '@/layouts/AppLayout.vue'
 import KanbanBoard from '@/components/recruitment/KanbanBoard.vue'
 import CandidateProfileDrawer from '@/components/recruitment/CandidateProfileDrawer.vue'
 import CandidateHistoryDrawer from '@/components/recruitment/CandidateHistoryDrawer.vue'
+import FinalStageModal from '@/components/recruitment/FinalStageModal.vue'
 import { useRecruitmentApi } from '@/composables/api/useRecruitmentApi'
-import type { Vacancy, Tag, PipelineBoard, PipelineApplication } from '@/types/recruitment'
+import type { Vacancy, Tag, PipelineBoard, PipelineApplication, SelectionStage } from '@/types/recruitment'
 
 const api = useRecruitmentApi()
 const vacancies = ref<Vacancy[]>([])
@@ -24,9 +25,14 @@ const selectedApp = ref<PipelineApplication | null>(null)
 const showDrawer = ref(false)
 const showHistory = ref(false)
 const historyAppId = ref<string | null>(null)
+const showFinalModal = ref(false)
+const finalApp = ref<PipelineApplication | null>(null)
 
 function onSelectApp(app: PipelineApplication) { selectedApp.value = app; showDrawer.value = true }
 function onViewHistory(applicationId: string) { historyAppId.value = applicationId; showHistory.value = true }
+function onFinalDecision(app: PipelineApplication) { finalApp.value = app; showFinalModal.value = true }
+
+const boardStages = computed<SelectionStage[]>(() => board.value?.stages?.map((s) => s.stage) ?? [])
 
 const selectedVacancy = computed(() => vacancies.value.find((v) => v.id === selectedVacancyId.value) ?? null)
 const vacancyOptions = computed(() => vacancies.value.map((v) => ({ label: v.jobProfile?.title ?? v.slug, value: v.id, subtitle: v.slug })))
@@ -112,7 +118,8 @@ onMounted(() => { void loadVacancies(); void api.getTags('candidate').then((t) =
         <KanbanBoard v-else-if="board" :board="board" :search="filterSearch" :filter-tag-ids="filterTags" @moved="loadBoard" @select="onSelectApp" />
       </div>
     </div>
-    <CandidateProfileDrawer v-model:visible="showDrawer" :application="selectedApp" @view-history="onViewHistory" />
+    <CandidateProfileDrawer v-model:visible="showDrawer" :application="selectedApp" @view-history="onViewHistory" @final-decision="onFinalDecision" />
     <CandidateHistoryDrawer v-model:visible="showHistory" :application-id="historyAppId" />
+    <FinalStageModal v-model:visible="showFinalModal" :application="finalApp" :stages="boardStages" @completed="loadBoard" />
   </AppLayout>
 </template>
