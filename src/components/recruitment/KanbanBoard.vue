@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import draggable from 'vuedraggable'
 import { useToast } from 'primevue/usetoast'
+import KanbanColumn from './KanbanColumn.vue'
 import { useRecruitmentApi } from '@/composables/api/useRecruitmentApi'
 import type { PipelineBoard, PipelineApplication } from '@/types/recruitment'
 import type { ApiError } from '@/types/api'
@@ -21,7 +21,7 @@ const emit = defineEmits<{
 const api = useRecruitmentApi()
 const toast = useToast()
 
-interface StageColumn {
+export interface StageColumn {
   stageId: string
   stageName: string
   stageColor: string
@@ -63,8 +63,9 @@ const filteredColumns = computed(() => {
 })
 
 const hasFilters = computed(() => props.search.length > 0 || props.filterTagIds.length > 0)
+const displayColumns = computed(() => hasFilters.value ? filteredColumns.value : columns.value)
 
-async function onEnd(evt: { from: HTMLElement; to: HTMLElement; oldIndex: number; newIndex: number; item: HTMLElement }) {
+async function onDragEnd(evt: { from: HTMLElement; to: HTMLElement; oldIndex: number; newIndex: number }) {
   const fromStageId = evt.from.dataset['stageId']
   const toStageId = evt.to.dataset['stageId']
   if (!fromStageId || !toStageId || fromStageId === toStageId) return
@@ -88,59 +89,17 @@ async function onEnd(evt: { from: HTMLElement; to: HTMLElement; oldIndex: number
 
 <template>
   <div class="flex h-full gap-4 p-4">
-    <div
-      v-for="col in (hasFilters ? filteredColumns : columns)"
+    <KanbanColumn
+      v-for="col in displayColumns"
       :key="col.stageId"
-      class="flex w-72 shrink-0 flex-col rounded-xl border border-surface bg-surface-50 dark:bg-surface-800"
-    >
-      <!-- Column header -->
-      <div class="flex items-center gap-2 border-b border-surface px-3 py-2">
-        <span class="h-3 w-3 shrink-0 rounded-full" :style="{ backgroundColor: col.stageColor }" />
-        <span class="flex-1 truncate text-sm font-semibold text-color">{{ col.stageName }}</span>
-        <span class="rounded-full bg-surface-200 px-2 py-0.5 text-xs font-medium text-muted-color dark:bg-surface-700">
-          {{ col.count }}
-        </span>
-      </div>
-
-      <!-- Draggable cards -->
-      <draggable
-        v-model="col.applications"
-        :group="hasFilters ? undefined : 'pipeline'"
-        item-key="id"
-        :data-stage-id="col.stageId"
-        class="flex-1 overflow-y-auto p-2"
-        ghost-class="opacity-30"
-        drag-class="rotate-2"
-        :animation="200"
-        @end="onEnd"
-      >
-        <template #item="{ element }">
-          <div
-            class="mb-2 cursor-grab rounded-lg border border-surface bg-surface-0 p-3 transition-shadow hover:shadow-md active:cursor-grabbing dark:bg-surface-900"
-            @click="emit('select', element)"
-          >
-            <p class="text-sm font-medium text-color">{{ element.candidateName }}</p>
-            <div class="mt-0.5 flex items-center gap-2 text-xs text-muted-color">
-              <span><i class="pi pi-clock mr-0.5 text-[10px]" />{{ element.daysInStage }}d</span>
-              <span v-if="element.score !== null"><i class="pi pi-star mr-0.5 text-[10px]" />{{ element.score }}</span>
-              <span v-if="element.totalDays > 0" class="ml-auto">{{ element.totalDays }}d total</span>
-            </div>
-            <div v-if="element.tags.length" class="mt-1.5 flex flex-wrap gap-1">
-              <span
-                v-for="tag in element.tags"
-                :key="tag.id"
-                class="rounded-full px-1.5 py-0.5 text-[10px] font-medium"
-                :style="{ backgroundColor: tag.color + '20', color: tag.color }"
-              >{{ tag.name }}</span>
-            </div>
-          </div>
-        </template>
-      </draggable>
-
-      <!-- Empty state -->
-      <div v-if="!col.applications.length" class="px-2 pb-3 pt-1 text-center text-xs text-muted-color">
-        Sin candidatos
-      </div>
-    </div>
+      v-model:applications="col.applications"
+      :stage-id="col.stageId"
+      :stage-name="col.stageName"
+      :stage-color="col.stageColor"
+      :count="col.count"
+      :drag-enabled="!hasFilters"
+      @select="(app) => emit('select', app)"
+      @drag-end="onDragEnd"
+    />
   </div>
 </template>
