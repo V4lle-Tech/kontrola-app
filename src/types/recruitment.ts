@@ -234,6 +234,12 @@ export interface SkipStageRequest {
   createdAt: string
 }
 
+export interface CreateSkipStageRequest {
+  applicationId: string
+  targetStageId: string
+  reason: string
+}
+
 // — Tags —
 export interface Tag {
   id: string

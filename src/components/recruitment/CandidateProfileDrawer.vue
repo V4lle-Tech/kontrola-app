@@ -18,6 +18,7 @@ const emit = defineEmits<{
   viewHistory: [applicationId: string]
   addNote: [applicationId: string]
   finalDecision: [application: PipelineApplication]
+  skipStage: [application: PipelineApplication]
 }>()
 
 const api = useRecruitmentApi()
@@ -149,8 +150,9 @@ function formatDate(iso: string): string {
       </div>
 
       <!-- Actions -->
-      <div class="flex gap-2">
+      <div class="flex flex-wrap gap-2">
         <Button icon="pi pi-history" label="Historial" severity="secondary" size="small" class="flex-1" @click="emit('viewHistory', application.id)" />
+        <Button v-if="application.status === 'in_progress'" icon="pi pi-forward" label="Saltar" severity="warn" size="small" class="flex-1" @click="emit('skipStage', application)" />
         <Button v-if="application.status === 'in_progress'" icon="pi pi-check-square" label="Decisión" severity="primary" size="small" class="flex-1" @click="emit('finalDecision', application)" />
       </div>
     </div>

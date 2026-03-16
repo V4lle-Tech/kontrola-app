@@ -26,6 +26,7 @@ import type {
   MoveApplicationRequest,
   CreateApplicationNoteRequest,
   SkipStageRequest,
+  CreateSkipStageRequest,
 } from '@/types/recruitment'
 
 export interface CandidateFilters extends PaginationParams {
@@ -210,6 +211,11 @@ export function useRecruitmentApi() {
     return data
   }
 
+  async function createSkipRequest(request: CreateSkipStageRequest): Promise<SkipStageRequest> {
+    const { data } = await apiClient.post<SkipStageRequest>('/skip-requests', request)
+    return data
+  }
+
   async function getSkipRequests(params?: PaginationParams): Promise<PaginatedResponse<SkipStageRequest>> {
     const { data } = await apiClient.get<PaginatedResponse<SkipStageRequest>>('/skip-requests', { params })
     return data
@@ -268,6 +274,7 @@ export function useRecruitmentApi() {
     getApplicationNotes,
     createApplicationNote,
     getApplicationHistory,
+    createSkipRequest,
     getSkipRequests,
     approveSkipRequest,
     rejectSkipRequest,
