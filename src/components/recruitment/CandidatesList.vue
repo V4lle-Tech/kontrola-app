@@ -1,15 +1,19 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import DataTable, { type DataTablePageEvent, type DataTableSortEvent } from 'primevue/datatable'
 import Column from 'primevue/column'
 import InputText from 'primevue/inputtext'
 import Tag from 'primevue/tag'
 import Button from 'primevue/button'
+import Checkbox from 'primevue/checkbox'
 import AdvancedFilterPanel from './AdvancedFilterPanel.vue'
+import BulkTagDialog from './BulkTagDialog.vue'
+import SavedSearchPanel from './SavedSearchPanel.vue'
 import type { CandidateFilterValues } from './AdvancedFilterPanel.vue'
 import { useRecruitmentApi, type CandidateFilters } from '@/composables/api/useRecruitmentApi'
-import type { CandidateListItem, CandidateSource } from '@/types/recruitment'
+import type { CandidateListItem } from '@/types/recruitment'
 import type { PaginatedResponse } from '@/types/pagination'
+import { sourceLabel, sourceSeverity } from '@/utils/candidateLabels'
 
 const emit = defineEmits<{
   select: [candidate: CandidateListItem]
@@ -24,7 +28,6 @@ withDefaults(defineProps<Props>(), {
 })
 
 const api = useRecruitmentApi()
-
 const data = ref<PaginatedResponse<CandidateListItem> | null>(null)
 const loading = ref(false)
 const search = ref('')
@@ -32,100 +35,96 @@ const page = ref(1)
 const pageSize = ref(25)
 const sortField = ref('fullName')
 const sortOrder = ref<'asc' | 'desc'>('asc')
-
 const showFilters = ref(false)
 const filterPanel = ref<InstanceType<typeof AdvancedFilterPanel> | null>(null)
-const activeFilters = ref<CandidateFilterValues>({
-  source: null,
-  tagIds: [],
-  educationLevel: null,
-  dateFrom: null,
-  dateTo: null,
-})
+const activeFilters = ref<CandidateFilterValues>({ source: null, tagIds: [], educationLevel: null, dateFrom: null, dateTo: null })
+
+const selectedIds = ref<Set<string>>(new Set())
+const bulkMode = ref(false)
+const showBulkTagDialog = ref(false)
+const bulkAction = ref<'assign' | 'remove'>('assign')
+const selectedCount = computed(() => selectedIds.value.size)
+const bulkCandidateIds = computed(() => Array.from(selectedIds.value))
+
+function toggleBulkMode() {
+  bulkMode.value = !bulkMode.value
+  if (!bulkMode.value) selectedIds.value = new Set()
+}
+
+function toggleCandidate(id: string) {
+  const next = new Set(selectedIds.value)
+  if (next.has(id)) next.delete(id)
+  else next.add(id)
+  selectedIds.value = next
+}
+
+function toggleAll() {
+  if (!data.value) return
+  if (selectedIds.value.size === data.value.items.length) {
+    selectedIds.value = new Set()
+  } else {
+    selectedIds.value = new Set(data.value.items.map((c) => c.id))
+  }
+}
+
+function openBulkTag(action: 'assign' | 'remove') {
+  bulkAction.value = action
+  showBulkTagDialog.value = true
+}
+
+function onBulkDone() { selectedIds.value = new Set(); bulkMode.value = false; void loadData() }
+
+const showSavedSearches = ref(false)
+const savedSearchPanel = ref<InstanceType<typeof SavedSearchPanel> | null>(null)
+const currentFilters = computed<Record<string, unknown>>(() => ({ search: search.value, ...activeFilters.value }))
+
+function applySavedSearch(filters: Record<string, unknown>) {
+  search.value = (filters['search'] as string) ?? ''
+  activeFilters.value = {
+    source: (filters['source'] as CandidateFilterValues['source']) ?? null,
+    tagIds: (filters['tagIds'] as string[]) ?? [],
+    educationLevel: (filters['educationLevel'] as CandidateFilterValues['educationLevel']) ?? null,
+    dateFrom: (filters['dateFrom'] as string) ?? null,
+    dateTo: (filters['dateTo'] as string) ?? null,
+  }
+  showSavedSearches.value = false
+  page.value = 1
+  void loadData()
+}
 
 let searchTimeout: ReturnType<typeof setTimeout> | null = null
 
 async function loadData() {
   loading.value = true
   try {
+    const f = activeFilters.value
     const params: CandidateFilters = {
-      page: page.value,
-      pageSize: pageSize.value,
-      search: search.value,
-      sortField: sortField.value,
-      sortOrder: sortOrder.value,
+      page: page.value, pageSize: pageSize.value, search: search.value,
+      sortField: sortField.value, sortOrder: sortOrder.value,
+      ...(f.source && { source: f.source }),
+      ...(f.tagIds.length > 0 && { tagIds: f.tagIds }),
+      ...(f.educationLevel && { educationLevel: f.educationLevel }),
+      ...(f.dateFrom && { dateFrom: f.dateFrom }),
+      ...(f.dateTo && { dateTo: f.dateTo }),
     }
-    if (activeFilters.value.source) params.source = activeFilters.value.source
-    if (activeFilters.value.tagIds.length > 0) params.tagIds = activeFilters.value.tagIds
-    if (activeFilters.value.educationLevel) params.educationLevel = activeFilters.value.educationLevel
-    if (activeFilters.value.dateFrom) params.dateFrom = activeFilters.value.dateFrom
-    if (activeFilters.value.dateTo) params.dateTo = activeFilters.value.dateTo
     data.value = await api.getCandidates(params)
   } finally {
     loading.value = false
   }
 }
 
-function onPage(event: DataTablePageEvent) {
-  page.value = (event.page ?? 0) + 1
-  pageSize.value = event.rows
-  void loadData()
-}
-
+function onPage(event: DataTablePageEvent) { page.value = (event.page ?? 0) + 1; pageSize.value = event.rows; void loadData() }
 function onSort(event: DataTableSortEvent) {
-  if (typeof event.sortField === 'string') {
-    sortField.value = event.sortField
-  }
-  sortOrder.value = event.sortOrder === 1 ? 'asc' : 'desc'
-  page.value = 1
-  void loadData()
+  if (typeof event.sortField === 'string') sortField.value = event.sortField
+  sortOrder.value = event.sortOrder === 1 ? 'asc' : 'desc'; page.value = 1; void loadData()
 }
-
 function onSearchInput() {
   if (searchTimeout) clearTimeout(searchTimeout)
-  searchTimeout = setTimeout(() => {
-    page.value = 1
-    void loadData()
-  }, 300)
+  searchTimeout = setTimeout(() => { page.value = 1; void loadData() }, 300)
 }
+function onFiltersChange(filters: CandidateFilterValues) { activeFilters.value = filters; page.value = 1; void loadData() }
 
-function onFiltersChange(filters: CandidateFilterValues) {
-  activeFilters.value = filters
-  page.value = 1
-  void loadData()
-}
-
-function onRowSelect(candidate: CandidateListItem) {
-  emit('select', candidate)
-}
-
-function sourceLabel(source: CandidateSource): string {
-  const labels: Record<CandidateSource, string> = {
-    manual: 'Manual',
-    portal: 'Portal',
-    referral: 'Referido',
-    linkedin: 'LinkedIn',
-    indeed: 'Indeed',
-    other: 'Otro',
-  }
-  return labels[source]
-}
-
-function sourceSeverity(source: CandidateSource): string {
-  const map: Record<CandidateSource, string> = {
-    manual: 'secondary',
-    portal: 'info',
-    referral: 'success',
-    linkedin: 'info',
-    indeed: 'warn',
-    other: 'secondary',
-  }
-  return map[source]
-}
-
-onMounted(() => {
-  void loadData()
-})
+onMounted(() => void loadData())
 </script>
 
 <template>
@@ -135,6 +134,30 @@ onMounted(() => {
       <div class="flex items-center justify-between">
         <h2 class="text-lg font-semibold text-color">Candidatos</h2>
         <div class="flex gap-1">
+          <Button
+            v-tooltip.top="'Selección masiva'"
+            icon="pi pi-check-square"
+            :severity="bulkMode ? 'primary' : 'secondary'"
+            text
+            size="small"
+            @click="toggleBulkMode"
+          />
+          <Button
+            v-tooltip.top="'Búsquedas guardadas'"
+            icon="pi pi-bookmark"
+            :severity="showSavedSearches ? 'primary' : 'secondary'"
+            text
+            size="small"
+            @click="showSavedSearches = !showSavedSearches"
+          />
+          <Button
+            v-tooltip.top="'Guardar búsqueda'"
+            icon="pi pi-save"
+            severity="secondary"
+            text
+            size="small"
+            @click="savedSearchPanel?.openSave()"
+          />
           <Button
             icon="pi pi-filter"
             :severity="filterPanel?.hasActiveFilters ? 'primary' : 'secondary'"
@@ -155,13 +178,23 @@ onMounted(() => {
           @input="onSearchInput"
         />
       </span>
+      <AdvancedFilterPanel v-if="showFilters" ref="filterPanel" @change="onFiltersChange" />
+    </div>
 
-      <!-- Advanced filters -->
-      <AdvancedFilterPanel
-        v-if="showFilters"
-        ref="filterPanel"
-        @change="onFiltersChange"
-      />
+    <!-- Saved searches -->
+    <SavedSearchPanel
+      v-if="showSavedSearches"
+      ref="savedSearchPanel"
+      module="candidates"
+      :current-filters="currentFilters"
+      @apply="applySavedSearch"
+    />
+
+    <!-- Bulk action bar -->
+    <div v-if="bulkMode && selectedCount > 0" class="flex items-center gap-2 border-b border-surface bg-primary/5 px-4 py-2">
+      <span class="text-sm font-medium text-color">{{ selectedCount }} seleccionados</span>
+      <Button icon="pi pi-tag" label="Asignar tags" severity="info" size="small" @click="openBulkTag('assign')" />
+      <Button icon="pi pi-times" label="Remover tags" severity="warn" size="small" @click="openBulkTag('remove')" />
     </div>
 
     <!-- DataTable -->
@@ -185,7 +218,7 @@ onMounted(() => {
         class="text-sm"
         @page="onPage"
         @sort="onSort"
-        @row-select="(e) => onRowSelect(e.data as CandidateListItem)"
+        @row-select="(e) => emit('select', e.data as CandidateListItem)"
       >
         <template #empty>
           <div class="py-6 text-center text-muted-color">
@@ -194,6 +227,15 @@ onMounted(() => {
           </div>
         </template>
 
+        <Column v-if="bulkMode" header="" class="w-12">
+          <template #header>
+            <Checkbox :model-value="data ? selectedIds.size === data.items.length && data.items.length > 0 : false" :binary="true" @update:model-value="toggleAll" />
+          </template>
+          <template #body="{ data: candidate }">
+            <Checkbox :model-value="selectedIds.has(candidate.id)" :binary="true" @update:model-value="toggleCandidate(candidate.id)" />
+          </template>
+        </Column>
+
         <Column field="fullName" header="Nombre" sortable class="min-w-48">
           <template #body="{ data: candidate }">
             <div class="flex items-center gap-2">
@@ -201,10 +243,7 @@ onMounted(() => {
                 <i class="pi pi-user text-xs text-primary" />
               </div>
               <div class="min-w-0">
-                <p
-                  class="truncate font-medium text-color"
-                  :class="selectedId === candidate.id ? 'text-primary' : ''"
-                >
+                <p class="truncate font-medium text-color" :class="selectedId === candidate.id ? 'text-primary' : ''">
                   {{ candidate.fullName }}
                 </p>
                 <p class="truncate text-xs text-muted-color">{{ candidate.email }}</p>
@@ -215,10 +254,7 @@ onMounted(() => {
 
         <Column field="source" header="Fuente" sortable class="w-28">
           <template #body="{ data: candidate }">
-            <Tag
-              :value="sourceLabel(candidate.source)"
-              :severity="sourceSeverity(candidate.source)"
-            />
+            <Tag :value="sourceLabel(candidate.source)" :severity="sourceSeverity(candidate.source)" />
           </template>
         </Column>
 
@@ -243,5 +279,12 @@ onMounted(() => {
         </Column>
       </DataTable>
     </div>
+
+    <BulkTagDialog
+      v-model:visible="showBulkTagDialog"
+      :candidate-ids="bulkCandidateIds"
+      :action="bulkAction"
+      @done="onBulkDone"
+    />
   </div>
 </template>

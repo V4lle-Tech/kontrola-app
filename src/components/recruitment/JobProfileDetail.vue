@@ -42,6 +42,33 @@ async function loadDetail() {
   }
 }
 
+async function changeStatus(newStatus: JobProfileStatus) {
+  try {
+    detail.value = await api.updateJobProfile(detail.value.id, {
+      ...detail.value,
+      status: newStatus,
+      requirements: detail.value.requirements ?? undefined,
+      functions: detail.value.functions ?? undefined,
+      benefits: detail.value.benefits ?? undefined,
+      salaryMin: detail.value.salaryMin ?? undefined,
+      salaryMax: detail.value.salaryMax ?? undefined,
+      description: detail.value.description ?? undefined,
+      confidentialityLevel: detail.value.confidentialityLevel,
+      clientId: detail.value.clientId ?? undefined,
+      tagIds: detail.value.tags?.map((t) => t.id),
+    })
+    emit('updated', detail.value)
+    toast.add({ severity: 'success', summary: `Estado cambiado a ${statusLabel(newStatus)}`, life: 3000 })
+  } catch (e: unknown) {
+    const apiError = e as ApiError
+    toast.add({
+      severity: 'error',
+      summary: apiError.title ?? 'Error al cambiar estado',
+      life: 5000,
+    })
+  }
+}
+
 async function deleteProfile() {
   try {
     await api.deleteJobProfile(detail.value.id)
@@ -110,6 +137,30 @@ void loadDetail()
         @click="emit('back')"
       />
       <h2 class="flex-1 truncate text-lg font-semibold text-color">{{ detail.title }}</h2>
+      <Button
+        v-if="detail.status === 'draft'"
+        icon="pi pi-check"
+        label="Activar"
+        severity="success"
+        size="small"
+        @click="changeStatus('active')"
+      />
+      <Button
+        v-if="detail.status === 'active'"
+        icon="pi pi-box"
+        label="Archivar"
+        severity="warn"
+        size="small"
+        @click="changeStatus('archived')"
+      />
+      <Button
+        v-if="detail.status === 'archived'"
+        icon="pi pi-replay"
+        label="Reactivar"
+        severity="info"
+        size="small"
+        @click="changeStatus('active')"
+      />
       <Button
         icon="pi pi-trash"
         severity="danger"

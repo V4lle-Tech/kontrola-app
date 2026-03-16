@@ -8,9 +8,11 @@ import Tab from 'primevue/tab'
 import TabPanels from 'primevue/tabpanels'
 import TabPanel from 'primevue/tabpanel'
 import { useToast } from 'primevue/usetoast'
+import CandidateEditDialog from './CandidateEditDialog.vue'
 import { useRecruitmentApi } from '@/composables/api/useRecruitmentApi'
-import type { Candidate, CandidateListItem, Application, CandidateSource } from '@/types/recruitment'
+import type { Candidate, CandidateListItem, Application } from '@/types/recruitment'
 import type { ApiError } from '@/types/api'
+import { sourceLabel, sourceSeverity } from '@/utils/candidateLabels'
 
 interface Props {
   candidate: CandidateListItem
@@ -30,6 +32,7 @@ const applications = ref<Application[]>([])
 const loading = ref(false)
 const loadingApplications = ref(false)
 const activeTab = ref('0')
+const showEditDialog = ref(false)
 
 watch(
   () => props.candidate,
@@ -69,50 +72,21 @@ async function deleteCandidate() {
     toast.add({ severity: 'success', summary: 'Candidato eliminado', life: 3000 })
   } catch (e: unknown) {
     const apiError = e as ApiError
-    toast.add({
-      severity: 'error',
-      summary: apiError.title ?? 'Error al eliminar candidato',
-      life: 5000,
-    })
+    toast.add({ severity: 'error', summary: apiError.title ?? 'Error al eliminar candidato', life: 5000 })
   }
-}
-
-function sourceLabel(source: CandidateSource): string {
-  const labels: Record<CandidateSource, string> = {
-    manual: 'Manual',
-    portal: 'Portal',
-    referral: 'Referido',
-    linkedin: 'LinkedIn',
-    indeed: 'Indeed',
-    other: 'Otro',
-  }
-  return labels[source]
-}
-
-function sourceSeverity(source: CandidateSource): string {
-  const map: Record<CandidateSource, string> = {
-    manual: 'secondary',
-    portal: 'info',
-    referral: 'success',
-    linkedin: 'info',
-    indeed: 'warn',
-    other: 'secondary',
-  }
-  return map[source]
 }
 
 function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString('es-MX', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })
+  return new Date(iso).toLocaleDateString('es-MX', { year: 'numeric', month: 'short', day: 'numeric' })
 }
 
 function onTabChange(value: string | number) {
-  if (String(value) === '1') {
-    void loadApplications()
-  }
+  if (String(value) === '1') void loadApplications()
+}
+
+function onUpdated(candidate: CandidateListItem) {
+  detail.value = candidate
+  emit('updated', candidate)
 }
 
 void loadDetail()
@@ -122,24 +96,12 @@ void loadDetail()
   <div class="flex h-full flex-col">
     <!-- Header -->
     <div class="flex items-center gap-2 border-b border-surface px-4 py-3">
-      <Button
-        icon="pi pi-arrow-left"
-        text
-        rounded
-        severity="secondary"
-        class="lg:hidden"
-        @click="emit('back')"
-      />
+      <Button icon="pi pi-arrow-left" text rounded severity="secondary" class="lg:hidden" @click="emit('back')" />
       <h2 class="flex-1 truncate text-lg font-semibold text-color">
         {{ detail?.fullName ?? candidate.fullName }}
       </h2>
-      <Button
-        icon="pi pi-trash"
-        severity="danger"
-        text
-        size="small"
-        @click="deleteCandidate"
-      />
+      <Button icon="pi pi-pencil" severity="secondary" text size="small" @click="showEditDialog = true" />
+      <Button icon="pi pi-trash" severity="danger" text size="small" @click="deleteCandidate" />
     </div>
 
     <!-- Content -->
@@ -195,20 +157,13 @@ void loadDetail()
             </div>
           </div>
 
-          <!-- Tags -->
           <div v-if="detail.tags?.length" class="mt-4">
             <p class="mb-2 text-sm text-muted-color">Etiquetas</p>
             <div class="flex flex-wrap gap-1">
-              <Tag
-                v-for="tag in detail.tags"
-                :key="tag.id"
-                :value="tag.name"
-                :style="{ backgroundColor: tag.color + '20', color: tag.color }"
-              />
+              <Tag v-for="tag in detail.tags" :key="tag.id" :value="tag.name" :style="{ backgroundColor: tag.color + '20', color: tag.color }" />
             </div>
           </div>
 
-          <!-- Notes -->
           <div v-if="detail.notes" class="mt-4">
             <p class="mb-2 text-sm text-muted-color">Notas</p>
             <p class="whitespace-pre-line text-sm text-color">{{ detail.notes }}</p>
@@ -231,7 +186,6 @@ void loadDetail()
           </TabList>
 
           <TabPanels>
-            <!-- Applications tab -->
             <TabPanel value="0">
               <div v-if="loadingApplications" class="flex items-center justify-center py-6">
                 <i class="pi pi-spin pi-spinner text-muted-color" />
@@ -248,12 +202,8 @@ void loadDetail()
                 >
                   <i class="pi pi-briefcase text-primary" />
                   <div class="min-w-0 flex-1">
-                    <p class="font-medium text-color">
-                      {{ app.vacancy?.jobProfile?.title ?? 'Vacante' }}
-                    </p>
-                    <p class="text-xs text-muted-color">
-                      {{ app.currentStage?.name ?? 'Sin etapa' }} · {{ app.daysInStage }} días
-                    </p>
+                    <p class="font-medium text-color">{{ app.vacancy?.jobProfile?.title ?? 'Vacante' }}</p>
+                    <p class="text-xs text-muted-color">{{ app.currentStage?.name ?? 'Sin etapa' }} · {{ app.daysInStage }} días</p>
                   </div>
                   <Tag
                     :value="app.status === 'in_progress' ? 'En proceso' : app.status === 'hired' ? 'Contratado' : app.status === 'rejected' ? 'Rechazado' : 'Retirado'"
@@ -263,7 +213,6 @@ void loadDetail()
               </div>
             </TabPanel>
 
-            <!-- Documents tab -->
             <TabPanel value="1">
               <div class="py-6 text-center text-sm text-muted-color">
                 <i class="pi pi-file mb-2 text-2xl" />
@@ -274,5 +223,13 @@ void loadDetail()
         </Tabs>
       </div>
     </div>
+
+    <CandidateEditDialog
+      v-if="detail"
+      v-model:visible="showEditDialog"
+      :candidate="detail"
+      :list-item="candidate"
+      @updated="onUpdated"
+    />
   </div>
 </template>
