@@ -9,6 +9,14 @@ export default mergeConfig(
       environment: 'jsdom',
       root: fileURLToPath(new URL('./', import.meta.url)),
       globals: true,
+      setupFiles: ['./tests/setup.ts'],
+      include: ['tests/**/*.spec.ts'],
+      coverage: {
+        provider: 'v8',
+        reporter: ['text', 'lcov'],
+        include: ['src/**/*.{ts,vue}'],
+        exclude: ['src/main.ts', 'src/**/*.d.ts', 'src/types/**', 'src/api/generated/**'],
+      },
     },
   }),
 )
