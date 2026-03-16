@@ -145,7 +145,11 @@ router.beforeEach((to) => {
     return { name: 'dashboard' }
   }
 
-  // TODO(F2-03): Check permissions via usePermissions() composable
+  // Check route-level permission
+  const requiredPermission = to.meta.permission as string | undefined
+  if (requiredPermission && !auth.checkPermission(requiredPermission)) {
+    return { name: 'dashboard' }
+  }
 
   return true
 })
