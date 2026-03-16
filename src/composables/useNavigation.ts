@@ -32,6 +32,7 @@ const menuSections: MenuSection[] = [
       { label: 'Publicaciones', icon: 'pi pi-send', to: '/recruitment/syndication', permission: 'syndication.view' },
       { label: 'Portales', icon: 'pi pi-globe', to: '/recruitment/job-boards', permission: 'syndication.manage' },
       { label: 'Templates', icon: 'pi pi-file-edit', to: '/recruitment/social-templates', permission: 'syndication.manage' },
+      { label: 'Config. Portales', icon: 'pi pi-wrench', to: '/recruitment/syndication-settings', permission: 'syndication.manage' },
     ],
   },
   {

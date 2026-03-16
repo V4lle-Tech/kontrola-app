@@ -104,6 +104,12 @@ const appRoutes: RouteRecordRaw[] = [
     component: () => import('@/pages/Recruitment/SocialTemplatesPage.vue'),
     meta: { requiresAuth: true, permission: 'syndication.manage' },
   },
+  {
+    path: '/recruitment/syndication-settings',
+    name: 'syndication-settings',
+    component: () => import('@/pages/Recruitment/SyndicationSettingsPage.vue'),
+    meta: { requiresAuth: true, permission: 'syndication.manage' },
+  },
 
   // Documents
   {
