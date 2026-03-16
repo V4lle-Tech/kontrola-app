@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import DataTable, { type DataTablePageEvent, type DataTableSortEvent } from 'primevue/datatable'
 import Column from 'primevue/column'
 import InputText from 'primevue/inputtext'
 import Tag from 'primevue/tag'
 import Button from 'primevue/button'
-import Select from 'primevue/select'
-import MultiSelect from 'primevue/multiselect'
-import DatePicker from 'primevue/datepicker'
+import AdvancedFilterPanel from './AdvancedFilterPanel.vue'
+import type { CandidateFilterValues } from './AdvancedFilterPanel.vue'
 import { useRecruitmentApi, type CandidateFilters } from '@/composables/api/useRecruitmentApi'
-import type { CandidateListItem, Tag as TagType, CandidateSource } from '@/types/recruitment'
+import type { CandidateListItem, CandidateSource } from '@/types/recruitment'
 import type { PaginatedResponse } from '@/types/pagination'
 
 const emit = defineEmits<{
@@ -34,24 +33,15 @@ const pageSize = ref(25)
 const sortField = ref('fullName')
 const sortOrder = ref<'asc' | 'desc'>('asc')
 
-// Filters
-const sourceFilter = ref<CandidateSource | null>(null)
-const tagFilter = ref<string[]>([])
-const dateRange = ref<Date[] | null>(null)
 const showFilters = ref(false)
-
-// Tags for filter options
-const availableTags = ref<TagType[]>([])
-
-const sourceOptions = [
-  { label: 'Todas', value: null },
-  { label: 'Manual', value: 'manual' },
-  { label: 'Portal', value: 'portal' },
-  { label: 'Referido', value: 'referral' },
-  { label: 'LinkedIn', value: 'linkedin' },
-  { label: 'Indeed', value: 'indeed' },
-  { label: 'Otro', value: 'other' },
-]
+const filterPanel = ref<InstanceType<typeof AdvancedFilterPanel> | null>(null)
+const activeFilters = ref<CandidateFilterValues>({
+  source: null,
+  tagIds: [],
+  educationLevel: null,
+  dateFrom: null,
+  dateTo: null,
+})
 
 let searchTimeout: ReturnType<typeof setTimeout> | null = null
 
@@ -65,25 +55,14 @@ async function loadData() {
       sortField: sortField.value,
       sortOrder: sortOrder.value,
     }
-    if (sourceFilter.value) params.source = sourceFilter.value
-    if (tagFilter.value.length > 0) params.tagIds = tagFilter.value
-    if (dateRange.value && dateRange.value.length === 2) {
-      const from = dateRange.value[0]
-      const to = dateRange.value[1]
-      if (from) params.dateFrom = from.toISOString().split('T')[0]
-      if (to) params.dateTo = to.toISOString().split('T')[0]
-    }
+    if (activeFilters.value.source) params.source = activeFilters.value.source
+    if (activeFilters.value.tagIds.length > 0) params.tagIds = activeFilters.value.tagIds
+    if (activeFilters.value.educationLevel) params.educationLevel = activeFilters.value.educationLevel
+    if (activeFilters.value.dateFrom) params.dateFrom = activeFilters.value.dateFrom
+    if (activeFilters.value.dateTo) params.dateTo = activeFilters.value.dateTo
     data.value = await api.getCandidates(params)
   } finally {
     loading.value = false
-  }
-}
-
-async function loadTags() {
-  try {
-    availableTags.value = await api.getTags('candidate')
-  } catch {
-    // Tags filter unavailable
   }
 }
 
@@ -110,14 +89,14 @@ function onSearchInput() {
   }, 300)
 }
 
-function onRowSelect(candidate: CandidateListItem) {
-  emit('select', candidate)
+function onFiltersChange(filters: CandidateFilterValues) {
+  activeFilters.value = filters
+  page.value = 1
+  void loadData()
 }
 
-function clearFilters() {
-  sourceFilter.value = null
-  tagFilter.value = []
-  dateRange.value = null
+function onRowSelect(candidate: CandidateListItem) {
+  emit('select', candidate)
 }
 
 function sourceLabel(source: CandidateSource): string {
@@ -144,17 +123,8 @@ function sourceSeverity(source: CandidateSource): string {
   return map[source]
 }
 
-const hasActiveFilters = ref(false)
-
-watch([sourceFilter, tagFilter, dateRange], () => {
-  hasActiveFilters.value = sourceFilter.value !== null || tagFilter.value.length > 0 || (dateRange.value !== null && dateRange.value.length === 2)
-  page.value = 1
-  void loadData()
-})
-
 onMounted(() => {
   void loadData()
-  void loadTags()
 })
 </script>
 
@@ -167,10 +137,10 @@ onMounted(() => {
         <div class="flex gap-1">
           <Button
             icon="pi pi-filter"
-            :severity="hasActiveFilters ? 'primary' : 'secondary'"
+            :severity="filterPanel?.hasActiveFilters ? 'primary' : 'secondary'"
             text
             size="small"
-            :badge="hasActiveFilters ? '!' : undefined"
+            :badge="filterPanel?.hasActiveFilters ? '!' : undefined"
             @click="showFilters = !showFilters"
           />
           <Button icon="pi pi-plus" label="Nuevo" size="small" @click="emit('create')" />
@@ -187,39 +157,11 @@ onMounted(() => {
       </span>
 
       <!-- Advanced filters -->
-      <div v-if="showFilters" class="flex flex-col gap-2 rounded-lg border border-surface p-3">
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-medium text-muted-color">Filtros avanzados</span>
-          <button type="button" class="text-xs text-primary hover:underline" @click="clearFilters">
-            Limpiar
-          </button>
-        </div>
-        <Select
-          v-model="sourceFilter"
-          :options="sourceOptions"
-          option-label="label"
-          option-value="value"
-          placeholder="Fuente"
-          class="w-full"
-        />
-        <MultiSelect
-          v-model="tagFilter"
-          :options="availableTags"
-          option-label="name"
-          option-value="id"
-          placeholder="Etiquetas"
-          :max-selected-labels="2"
-          class="w-full"
-        />
-        <DatePicker
-          v-model="dateRange"
-          selection-mode="range"
-          placeholder="Rango de fechas"
-          date-format="dd/mm/yy"
-          show-icon
-          class="w-full"
-        />
-      </div>
+      <AdvancedFilterPanel
+        v-if="showFilters"
+        ref="filterPanel"
+        @change="onFiltersChange"
+      />
     </div>
 
     <!-- DataTable -->
