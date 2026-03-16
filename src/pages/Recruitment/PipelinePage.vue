@@ -8,6 +8,7 @@ import KanbanBoard from '@/components/recruitment/KanbanBoard.vue'
 import CandidateProfileDrawer from '@/components/recruitment/CandidateProfileDrawer.vue'
 import CandidateHistoryDrawer from '@/components/recruitment/CandidateHistoryDrawer.vue'
 import FinalStageModal from '@/components/recruitment/FinalStageModal.vue'
+import AddNoteModal from '@/components/recruitment/AddNoteModal.vue'
 import { useRecruitmentApi } from '@/composables/api/useRecruitmentApi'
 import type { Vacancy, Tag, PipelineBoard, PipelineApplication, SelectionStage } from '@/types/recruitment'
 
@@ -27,10 +28,13 @@ const showHistory = ref(false)
 const historyAppId = ref<string | null>(null)
 const showFinalModal = ref(false)
 const finalApp = ref<PipelineApplication | null>(null)
+const showNoteModal = ref(false)
+const noteAppId = ref<string | null>(null)
 
 function onSelectApp(app: PipelineApplication) { selectedApp.value = app; showDrawer.value = true }
 function onViewHistory(applicationId: string) { historyAppId.value = applicationId; showHistory.value = true }
 function onFinalDecision(app: PipelineApplication) { finalApp.value = app; showFinalModal.value = true }
+function onAddNote(applicationId: string) { noteAppId.value = applicationId; showNoteModal.value = true }
 
 const boardStages = computed<SelectionStage[]>(() => board.value?.stages?.map((s) => s.stage) ?? [])
 
@@ -118,8 +122,9 @@ onMounted(() => { void loadVacancies(); void api.getTags('candidate').then((t) =
         <KanbanBoard v-else-if="board" :board="board" :search="filterSearch" :filter-tag-ids="filterTags" @moved="loadBoard" @select="onSelectApp" />
       </div>
     </div>
-    <CandidateProfileDrawer v-model:visible="showDrawer" :application="selectedApp" @view-history="onViewHistory" @final-decision="onFinalDecision" />
+    <CandidateProfileDrawer v-model:visible="showDrawer" :application="selectedApp" @view-history="onViewHistory" @final-decision="onFinalDecision" @add-note="onAddNote" />
     <CandidateHistoryDrawer v-model:visible="showHistory" :application-id="historyAppId" />
     <FinalStageModal v-model:visible="showFinalModal" :application="finalApp" :stages="boardStages" @completed="loadBoard" />
+    <AddNoteModal v-model:visible="showNoteModal" :application-id="noteAppId" @saved="loadBoard" />
   </AppLayout>
 </template>
