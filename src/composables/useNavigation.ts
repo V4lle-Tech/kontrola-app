@@ -40,6 +40,7 @@ const menuSections: MenuSection[] = [
     items: [
       { label: 'Documentos', icon: 'pi pi-file', to: '/documents', permission: 'documents.view' },
       { label: 'Tipos de Documento', icon: 'pi pi-folder', to: '/documents/types', permission: 'document-types.view' },
+      { label: 'Cumplimiento', icon: 'pi pi-verified', to: '/documents/compliance', permission: 'documents.view' },
     ],
   },
   {

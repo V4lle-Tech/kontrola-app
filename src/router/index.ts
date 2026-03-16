@@ -130,6 +130,12 @@ const appRoutes: RouteRecordRaw[] = [
     component: () => import('@/pages/Documents/DocumentTypesPage.vue'),
     meta: { requiresAuth: true, permission: 'document-types.view' },
   },
+  {
+    path: '/documents/compliance',
+    name: 'compliance',
+    component: () => import('@/pages/Documents/ComplianceDashboardPage.vue'),
+    meta: { requiresAuth: true, permission: 'documents.view' },
+  },
 
   // CRM
   {
