@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import Dialog from 'primevue/dialog'
 import AppLayout from '@/layouts/AppLayout.vue'
 import JobProfilesList from '@/components/recruitment/JobProfilesList.vue'
 import JobProfileDetail from '@/components/recruitment/JobProfileDetail.vue'
+import JobProfileWizard from '@/components/recruitment/JobProfileWizard.vue'
 import type { JobProfile } from '@/types/recruitment'
 
 const selectedProfile = ref<JobProfile | null>(null)
 const listKey = ref(0)
+const showCreateWizard = ref(false)
+
 const showDetail = computed(() => selectedProfile.value !== null)
 
 function selectProfile(profile: JobProfile) {
@@ -27,8 +31,14 @@ function onProfileDeleted() {
   listKey.value++
 }
 
+function onProfileCreated(profile: JobProfile) {
+  showCreateWizard.value = false
+  listKey.value++
+  selectedProfile.value = profile
+}
+
 function openCreate() {
-  // Wizard will be wired in F4-08
+  showCreateWizard.value = true
 }
 </script>
 
@@ -66,5 +76,19 @@ function openCreate() {
         </div>
       </div>
     </div>
+
+    <!-- Create wizard dialog -->
+    <Dialog
+      v-model:visible="showCreateWizard"
+      modal
+      header="Nuevo Perfil de Puesto"
+      class="w-full max-w-3xl"
+      :dismissable-mask="false"
+    >
+      <JobProfileWizard
+        @created="onProfileCreated"
+        @cancel="showCreateWizard = false"
+      />
+    </Dialog>
   </AppLayout>
 </template>
