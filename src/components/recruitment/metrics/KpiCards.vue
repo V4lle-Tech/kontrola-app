@@ -7,12 +7,12 @@ interface Props {
 defineProps<Props>()
 
 const cards = [
-  { key: 'totalCandidates', label: 'Candidatos', icon: 'pi pi-users', color: 'text-blue-500' },
-  { key: 'totalApplications', label: 'Postulaciones', icon: 'pi pi-file', color: 'text-purple-500' },
-  { key: 'totalHired', label: 'Contratados', icon: 'pi pi-check-circle', color: 'text-green-500' },
-  { key: 'openVacancies', label: 'Vacantes Abiertas', icon: 'pi pi-megaphone', color: 'text-orange-500' },
-  { key: 'averageTimeToFill', label: 'Días Promedio', icon: 'pi pi-clock', color: 'text-cyan-500' },
-  { key: 'conversionRate', label: 'Tasa Conversión', icon: 'pi pi-percentage', color: 'text-pink-500' },
+  { key: 'totalCandidates', label: 'Candidatos', icon: 'pi pi-users', color: 'text-primary' },
+  { key: 'totalApplications', label: 'Postulaciones', icon: 'pi pi-file', color: 'text-muted-color' },
+  { key: 'totalHired', label: 'Contratados', icon: 'pi pi-check-circle', color: 'text-primary' },
+  { key: 'openVacancies', label: 'Vacantes Abiertas', icon: 'pi pi-megaphone', color: 'text-primary' },
+  { key: 'averageTimeToFill', label: 'Días Promedio', icon: 'pi pi-clock', color: 'text-muted-color' },
+  { key: 'conversionRate', label: 'Tasa Conversión', icon: 'pi pi-percentage', color: 'text-primary' },
 ] as const
 
 function formatValue(key: string, value: number): string {

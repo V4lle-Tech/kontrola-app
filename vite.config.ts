@@ -11,4 +11,15 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-vue': ['vue', 'vue-router', 'pinia'],
+          'vendor-primevue': ['primevue/config', 'primevue/datatable', 'primevue/column', 'primevue/button', 'primevue/dialog', 'primevue/inputtext', 'primevue/toast', 'primevue/usetoast'],
+          'vendor-chart': ['chart.js', 'vue-chartjs'],
+        },
+      },
+    },
+  },
 })

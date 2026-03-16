@@ -29,6 +29,8 @@ async function logout() {
 
     <!-- Sidebar -->
     <aside
+      role="navigation"
+      aria-label="Menú principal"
       class="z-50 flex shrink-0 flex-col border-r border-surface bg-surface-0 dark:bg-surface-900 transition-all duration-300"
       :class="[
         isMobile
@@ -73,6 +75,7 @@ async function logout() {
           text
           rounded
           severity="secondary"
+          :aria-label="isMobile ? 'Abrir menú' : (collapsed ? 'Expandir menú' : 'Contraer menú')"
           @click="toggle"
         />
 
@@ -87,6 +90,7 @@ async function logout() {
           text
           rounded
           severity="secondary"
+          aria-label="Cerrar sesión"
           @click="logout"
         />
       </header>

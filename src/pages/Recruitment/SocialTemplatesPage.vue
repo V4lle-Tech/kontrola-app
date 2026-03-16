@@ -111,7 +111,7 @@ onMounted(() => { void loadTemplates() })
           </Column>
           <Column header="Predeterminado" style="width: 140px">
             <template #body="{ data }">
-              <i v-if="data.isDefault" class="pi pi-check-circle text-green-500" />
+              <i v-if="data.isDefault" class="pi pi-check-circle text-primary" />
             </template>
           </Column>
           <Column header="Acciones" style="width: 120px">

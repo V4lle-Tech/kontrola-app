@@ -181,7 +181,7 @@ async function removeContact(id: string) {
               <Column field="email" header="Email" />
               <Column field="position" header="Puesto" />
               <Column header="Principal" style="width: 80px">
-                <template #body="{ data }"><i v-if="data.isPrimary" class="pi pi-star-fill text-yellow-500" /></template>
+                <template #body="{ data }"><i v-if="data.isPrimary" class="pi pi-star-fill text-primary" /></template>
               </Column>
               <Column header="Acciones" style="width: 100px">
                 <template #body="{ data }">

@@ -130,12 +130,12 @@ onMounted(() => { void loadVacancy() })
             <div class="flex flex-col gap-1">
               <label class="text-sm font-medium text-color">Nombre *</label>
               <InputText v-model="form.givenName" required :invalid="!!fieldErrors['givenName']" />
-              <small v-if="fieldErrors['givenName']" class="text-red-500">{{ fieldErrors['givenName'][0] }}</small>
+              <small v-if="fieldErrors['givenName']" class="p-error">{{ fieldErrors['givenName'][0] }}</small>
             </div>
             <div class="flex flex-col gap-1">
               <label class="text-sm font-medium text-color">Apellido paterno *</label>
               <InputText v-model="form.paternalName" required :invalid="!!fieldErrors['paternalName']" />
-              <small v-if="fieldErrors['paternalName']" class="text-red-500">{{ fieldErrors['paternalName'][0] }}</small>
+              <small v-if="fieldErrors['paternalName']" class="p-error">{{ fieldErrors['paternalName'][0] }}</small>
             </div>
             <div class="flex flex-col gap-1">
               <label class="text-sm font-medium text-color">Apellido materno</label>
@@ -147,7 +147,7 @@ onMounted(() => { void loadVacancy() })
             <div class="flex flex-col gap-1">
               <label class="text-sm font-medium text-color">Correo electrónico *</label>
               <InputText v-model="form.email" type="email" required :invalid="!!fieldErrors['email']" />
-              <small v-if="fieldErrors['email']" class="text-red-500">{{ fieldErrors['email'][0] }}</small>
+              <small v-if="fieldErrors['email']" class="p-error">{{ fieldErrors['email'][0] }}</small>
             </div>
             <div class="flex flex-col gap-1">
               <label class="text-sm font-medium text-color">Teléfono</label>
@@ -167,7 +167,7 @@ onMounted(() => { void loadVacancy() })
             <div v-for="q in vacancy.questions" :key="q.id" class="flex flex-col gap-1">
               <label class="text-sm font-medium text-color">
                 {{ q.questionText }}
-                <span v-if="q.isRequired" class="text-red-500">*</span>
+                <span v-if="q.isRequired" class="p-error">*</span>
               </label>
               <InputText v-if="q.type === 'yes_no'" v-model="form.answers[q.id]" placeholder="Sí / No" :required="q.isRequired" />
               <Textarea v-else v-model="form.answers[q.id]" rows="3" :required="q.isRequired" />

@@ -176,7 +176,7 @@ onMounted(async () => {
                   :invalid="!!fieldErrors.title"
                   placeholder="Ej: Desarrollador Full Stack"
                 />
-                <small v-if="fieldErrors.title" class="text-red-500">{{ fieldErrors.title[0] }}</small>
+                <small v-if="fieldErrors.title" class="p-error">{{ fieldErrors.title[0] }}</small>
               </div>
 
               <div class="flex flex-col gap-1 sm:col-span-2">

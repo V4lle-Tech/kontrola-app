@@ -124,9 +124,9 @@ function dismiss() {
       >
         <div
           class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
-          :class="completed[item.key] ? 'bg-green-100 dark:bg-green-900/30' : 'bg-surface-100 dark:bg-surface-800'"
+          :class="completed[item.key] ? 'bg-highlight' : 'bg-surface-100 dark:bg-surface-800'"
         >
-          <i v-if="completed[item.key]" class="pi pi-check text-sm text-green-600 dark:text-green-400" />
+          <i v-if="completed[item.key]" class="pi pi-check text-sm text-primary" />
           <i v-else :class="item.icon" class="text-sm text-muted-color" />
         </div>
         <div class="min-w-0 flex-1">

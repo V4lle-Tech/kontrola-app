@@ -65,7 +65,7 @@ async function submit() {
           :invalid="!!fieldErrors.givenName"
           autocomplete="given-name"
         />
-        <small v-if="fieldErrors.givenName" class="text-red-500">{{ fieldErrors.givenName[0] }}</small>
+        <small v-if="fieldErrors.givenName" class="p-error">{{ fieldErrors.givenName[0] }}</small>
       </div>
 
       <div class="grid grid-cols-2 gap-3">
@@ -77,7 +77,7 @@ async function submit() {
             :invalid="!!fieldErrors.paternalName"
             autocomplete="family-name"
           />
-          <small v-if="fieldErrors.paternalName" class="text-red-500">{{ fieldErrors.paternalName[0] }}</small>
+          <small v-if="fieldErrors.paternalName" class="p-error">{{ fieldErrors.paternalName[0] }}</small>
         </div>
 
         <div class="flex flex-col gap-1">
@@ -100,7 +100,7 @@ async function submit() {
           :invalid="!!fieldErrors.email"
           autocomplete="email"
         />
-        <small v-if="fieldErrors.email" class="text-red-500">{{ fieldErrors.email[0] }}</small>
+        <small v-if="fieldErrors.email" class="p-error">{{ fieldErrors.email[0] }}</small>
       </div>
 
       <div class="flex flex-col gap-1">
@@ -113,7 +113,7 @@ async function submit() {
           input-class="w-full"
           autocomplete="new-password"
         />
-        <small v-if="fieldErrors.password" class="text-red-500">{{ fieldErrors.password[0] }}</small>
+        <small v-if="fieldErrors.password" class="p-error">{{ fieldErrors.password[0] }}</small>
       </div>
 
       <div class="flex flex-col gap-1">
@@ -127,7 +127,7 @@ async function submit() {
           input-class="w-full"
           autocomplete="new-password"
         />
-        <small v-if="fieldErrors.passwordConfirmation" class="text-red-500">{{ fieldErrors.passwordConfirmation[0] }}</small>
+        <small v-if="fieldErrors.passwordConfirmation" class="p-error">{{ fieldErrors.passwordConfirmation[0] }}</small>
       </div>
 
       <Button

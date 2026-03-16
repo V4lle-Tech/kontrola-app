@@ -116,7 +116,7 @@ async function submit() {
             :invalid="!!fieldErrors.givenName"
             autocomplete="given-name"
           />
-          <small v-if="fieldErrors.givenName" class="text-red-500">{{ fieldErrors.givenName[0] }}</small>
+          <small v-if="fieldErrors.givenName" class="p-error">{{ fieldErrors.givenName[0] }}</small>
         </div>
 
         <div class="flex flex-col gap-1">
@@ -127,7 +127,7 @@ async function submit() {
             :invalid="!!fieldErrors.paternalName"
             autocomplete="family-name"
           />
-          <small v-if="fieldErrors.paternalName" class="text-red-500">{{ fieldErrors.paternalName[0] }}</small>
+          <small v-if="fieldErrors.paternalName" class="p-error">{{ fieldErrors.paternalName[0] }}</small>
         </div>
 
         <div class="flex flex-col gap-1">
@@ -148,7 +148,7 @@ async function submit() {
             :invalid="!!fieldErrors.email"
             autocomplete="email"
           />
-          <small v-if="fieldErrors.email" class="text-red-500">{{ fieldErrors.email[0] }}</small>
+          <small v-if="fieldErrors.email" class="p-error">{{ fieldErrors.email[0] }}</small>
         </div>
 
         <div class="flex flex-col gap-1">
@@ -159,7 +159,7 @@ async function submit() {
             type="tel"
             autocomplete="tel"
           />
-          <small v-if="fieldErrors.phone" class="text-red-500">{{ fieldErrors.phone[0] }}</small>
+          <small v-if="fieldErrors.phone" class="p-error">{{ fieldErrors.phone[0] }}</small>
         </div>
 
         <div class="flex flex-col gap-1">

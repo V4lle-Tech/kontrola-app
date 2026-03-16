@@ -82,7 +82,7 @@ async function submit() {
           :invalid="!!fieldErrors.email"
           autocomplete="email"
         />
-        <small v-if="fieldErrors.email" class="text-red-500">{{ fieldErrors.email[0] }}</small>
+        <small v-if="fieldErrors.email" class="p-error">{{ fieldErrors.email[0] }}</small>
       </div>
 
       <div class="flex flex-col gap-1">
@@ -97,7 +97,7 @@ async function submit() {
           :invalid="!!fieldErrors.roleIds"
           class="w-full"
         />
-        <small v-if="fieldErrors.roleIds" class="text-red-500">{{ fieldErrors.roleIds[0] }}</small>
+        <small v-if="fieldErrors.roleIds" class="p-error">{{ fieldErrors.roleIds[0] }}</small>
       </div>
 
       <div class="flex justify-end gap-2">

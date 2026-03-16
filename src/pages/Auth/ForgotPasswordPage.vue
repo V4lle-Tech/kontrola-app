@@ -60,7 +60,7 @@ async function submit() {
           :invalid="!!fieldErrors.email"
           autocomplete="email"
         />
-        <small v-if="fieldErrors.email" class="text-red-500">{{ fieldErrors.email[0] }}</small>
+        <small v-if="fieldErrors.email" class="p-error">{{ fieldErrors.email[0] }}</small>
       </div>
 
       <Button

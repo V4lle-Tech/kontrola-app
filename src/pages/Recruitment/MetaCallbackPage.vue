@@ -40,12 +40,12 @@ onMounted(async () => {
           <p class="text-color">Conectando con Meta...</p>
         </div>
         <div v-else-if="status === 'success'">
-          <i class="pi pi-check-circle mb-3 text-4xl text-green-500" />
+          <i class="pi pi-check-circle mb-3 text-4xl text-primary" />
           <p class="text-color">Cuenta Meta conectada exitosamente</p>
           <p class="mt-1 text-sm text-muted-color">Redirigiendo a configuración...</p>
         </div>
         <div v-else>
-          <i class="pi pi-times-circle mb-3 text-4xl text-red-500" />
+          <i class="pi pi-times-circle mb-3 text-4xl p-error" />
           <p class="text-color">{{ errorMessage }}</p>
           <router-link :to="{ name: 'syndication-settings' }" class="mt-2 inline-block text-sm text-primary">
             Volver a configuración

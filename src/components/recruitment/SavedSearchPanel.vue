@@ -58,7 +58,7 @@ defineExpose({ openSave, searchCount: searches })
       </button>
       <button
         type="button"
-        class="shrink-0 text-muted-color hover:text-red-500"
+        class="shrink-0 text-muted-color hover:text-color"
         @click="remove(ss.id)"
       >
         <i class="pi pi-times text-xs" />

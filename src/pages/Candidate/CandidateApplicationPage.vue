@@ -172,7 +172,7 @@ onMounted(() => { void load() })
                   <p class="text-sm font-medium text-color">{{ doc.name }}</p>
                   <p class="text-xs text-muted-color">{{ formatDate(doc.uploadedAt) }}</p>
                 </div>
-                <i class="pi pi-check-circle text-green-500" />
+                <i class="pi pi-check-circle text-primary" />
               </div>
             </div>
             <p v-else class="text-sm text-muted-color">Sin documentos subidos</p>

@@ -24,7 +24,7 @@ async function endImpersonation() {
 </script>
 
 <template>
-  <div class="flex items-center justify-between bg-yellow-500 px-4 py-2 text-sm font-medium text-black">
+  <div class="flex items-center justify-between bg-emphasis px-4 py-2 text-sm font-medium text-primary-contrast">
     <div class="flex items-center gap-2">
       <i class="pi pi-eye" />
       <span>Impersonando: <strong>{{ tenantName }}</strong></span>

@@ -78,12 +78,12 @@ async function submit() {
 
       <!-- Reason (required) -->
       <div>
-        <label class="mb-1 block text-sm font-medium text-color">Justificación <span class="text-red-500">*</span></label>
+        <label class="mb-1 block text-sm font-medium text-color">Justificación <span class="p-error">*</span></label>
         <Textarea v-model="reason" rows="3" class="w-full" placeholder="Explica el motivo del salto de etapa..." auto-resize />
       </div>
 
       <!-- Info banner -->
-      <div class="rounded-lg border border-surface bg-blue-50 p-3 text-sm text-blue-700 dark:bg-blue-900/20 dark:text-blue-400">
+      <div class="rounded-lg border border-surface bg-highlight p-3 text-sm text-color">
         <i class="pi pi-info-circle mr-1" />
         Esta solicitud requiere autorización de un supervisor antes de hacerse efectiva.
       </div>

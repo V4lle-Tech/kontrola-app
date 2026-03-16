@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Tag from 'primevue/tag'
 import type { PipelineApplication } from '@/types/recruitment'
 
 interface Props {
@@ -58,16 +59,10 @@ function initials(name: string): string {
 
     <!-- Status indicator for non-active applications -->
     <div v-if="application.status !== 'in_progress'" class="mt-1.5">
-      <span
-        class="rounded-full px-2 py-0.5 text-[10px] font-medium"
-        :class="{
-          'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400': application.status === 'hired',
-          'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400': application.status === 'rejected',
-          'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400': application.status === 'withdrawn',
-        }"
-      >
-        {{ application.status === 'hired' ? 'Contratado' : application.status === 'rejected' ? 'Rechazado' : 'Retirado' }}
-      </span>
+      <Tag
+        :value="application.status === 'hired' ? 'Contratado' : application.status === 'rejected' ? 'Rechazado' : 'Retirado'"
+        :severity="application.status === 'hired' ? 'success' : application.status === 'rejected' ? 'danger' : 'warn'"
+      />
     </div>
   </div>
 </template>

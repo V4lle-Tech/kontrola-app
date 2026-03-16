@@ -135,12 +135,12 @@ async function submit() {
           <div class="flex flex-col gap-1">
             <label class="text-sm font-medium text-color">Nombre(s)</label>
             <InputText v-model="form.givenName" :invalid="!!fieldErrors.givenName" />
-            <small v-if="fieldErrors.givenName" class="text-red-500">{{ fieldErrors.givenName[0] }}</small>
+            <small v-if="fieldErrors.givenName" class="p-error">{{ fieldErrors.givenName[0] }}</small>
           </div>
           <div class="flex flex-col gap-1">
             <label class="text-sm font-medium text-color">Apellido paterno</label>
             <InputText v-model="form.paternalName" :invalid="!!fieldErrors.paternalName" />
-            <small v-if="fieldErrors.paternalName" class="text-red-500">{{ fieldErrors.paternalName[0] }}</small>
+            <small v-if="fieldErrors.paternalName" class="p-error">{{ fieldErrors.paternalName[0] }}</small>
           </div>
           <div class="flex flex-col gap-1">
             <label class="text-sm font-medium text-color">Apellido materno</label>
@@ -149,7 +149,7 @@ async function submit() {
           <div class="flex flex-col gap-1">
             <label class="text-sm font-medium text-color">Correo electrónico</label>
             <InputText v-model="form.email" type="email" :invalid="!!fieldErrors.email" />
-            <small v-if="fieldErrors.email" class="text-red-500">{{ fieldErrors.email[0] }}</small>
+            <small v-if="fieldErrors.email" class="p-error">{{ fieldErrors.email[0] }}</small>
           </div>
           <div class="flex flex-col gap-1">
             <label class="text-sm font-medium text-color">Teléfono</label>

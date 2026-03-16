@@ -62,7 +62,7 @@ async function submit() {
           :invalid="!!fieldErrors.email"
           autocomplete="email"
         />
-        <small v-if="fieldErrors.email" class="text-red-500">{{ fieldErrors.email[0] }}</small>
+        <small v-if="fieldErrors.email" class="p-error">{{ fieldErrors.email[0] }}</small>
       </div>
 
       <div class="flex flex-col gap-1">
@@ -76,7 +76,7 @@ async function submit() {
           input-class="w-full"
           autocomplete="current-password"
         />
-        <small v-if="fieldErrors.password" class="text-red-500">{{ fieldErrors.password[0] }}</small>
+        <small v-if="fieldErrors.password" class="p-error">{{ fieldErrors.password[0] }}</small>
       </div>
 
       <div class="flex items-center justify-between">

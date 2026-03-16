@@ -87,7 +87,7 @@ async function submit() {
             :invalid="!!fieldErrors.givenName"
             autocomplete="given-name"
           />
-          <small v-if="fieldErrors.givenName" class="text-red-500">{{ fieldErrors.givenName[0] }}</small>
+          <small v-if="fieldErrors.givenName" class="p-error">{{ fieldErrors.givenName[0] }}</small>
         </div>
 
         <div class="flex flex-col gap-1">
@@ -98,7 +98,7 @@ async function submit() {
             :invalid="!!fieldErrors.paternalName"
             autocomplete="family-name"
           />
-          <small v-if="fieldErrors.paternalName" class="text-red-500">{{ fieldErrors.paternalName[0] }}</small>
+          <small v-if="fieldErrors.paternalName" class="p-error">{{ fieldErrors.paternalName[0] }}</small>
         </div>
 
         <div class="flex flex-col gap-1">
@@ -119,7 +119,7 @@ async function submit() {
             :invalid="!!fieldErrors.email"
             autocomplete="email"
           />
-          <small v-if="fieldErrors.email" class="text-red-500">{{ fieldErrors.email[0] }}</small>
+          <small v-if="fieldErrors.email" class="p-error">{{ fieldErrors.email[0] }}</small>
         </div>
 
         <div class="flex flex-col gap-1">
@@ -132,7 +132,7 @@ async function submit() {
             input-class="w-full"
             autocomplete="new-password"
           />
-          <small v-if="fieldErrors.password" class="text-red-500">{{ fieldErrors.password[0] }}</small>
+          <small v-if="fieldErrors.password" class="p-error">{{ fieldErrors.password[0] }}</small>
         </div>
 
         <div class="flex flex-col gap-1">
@@ -147,7 +147,7 @@ async function submit() {
             :invalid="!!fieldErrors.roleIds"
             class="w-full"
           />
-          <small v-if="fieldErrors.roleIds" class="text-red-500">{{ fieldErrors.roleIds[0] }}</small>
+          <small v-if="fieldErrors.roleIds" class="p-error">{{ fieldErrors.roleIds[0] }}</small>
         </div>
       </div>
 

@@ -46,7 +46,7 @@ async function requestMagicLink() {
 
         <template v-else>
           <div class="flex flex-col items-center gap-4 py-4 text-center">
-            <i class="pi pi-check-circle text-5xl text-green-500" />
+            <i class="pi pi-check-circle text-5xl text-primary" />
             <p class="text-color">
               Hemos enviado un enlace de acceso a <strong>{{ email }}</strong>.
             </p>

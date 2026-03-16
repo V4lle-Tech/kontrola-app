@@ -92,7 +92,7 @@ async function submit() {
       </div>
 
       <!-- No final stage warning -->
-      <div v-if="!targetStage" class="rounded-lg border border-yellow-300 bg-yellow-50 p-3 text-sm text-yellow-700 dark:border-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-400">
+      <div v-if="!targetStage" class="rounded-lg border border-surface bg-highlight p-3 text-sm text-color">
         <i class="pi pi-exclamation-triangle mr-1" />
         No hay una etapa de tipo "{{ outcome === 'hired' ? 'contratado' : 'rechazado' }}" configurada en este proceso.
       </div>

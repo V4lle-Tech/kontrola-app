@@ -221,12 +221,12 @@ onMounted(() => {
             :invalid="!!fieldErrors.name"
             placeholder="Ej: Proceso estándar"
           />
-          <small v-if="fieldErrors.name" class="text-red-500">{{ fieldErrors.name[0] }}</small>
+          <small v-if="fieldErrors.name" class="p-error">{{ fieldErrors.name[0] }}</small>
         </div>
 
         <div class="flex flex-col gap-1">
           <label class="text-sm font-medium text-color">Etapas</label>
-          <small v-if="fieldErrors.stages" class="text-red-500">{{ fieldErrors.stages[0] }}</small>
+          <small v-if="fieldErrors.stages" class="p-error">{{ fieldErrors.stages[0] }}</small>
           <StageEditor v-model="formStages" />
         </div>
 

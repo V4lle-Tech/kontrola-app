@@ -83,12 +83,12 @@ async function submit() {
           :invalid="!!fieldErrors.name"
           placeholder="Ej: Reclutador"
         />
-        <small v-if="fieldErrors.name" class="text-red-500">{{ fieldErrors.name[0] }}</small>
+        <small v-if="fieldErrors.name" class="p-error">{{ fieldErrors.name[0] }}</small>
       </div>
 
       <div class="flex flex-col gap-1">
         <label class="text-sm font-medium text-color">Permisos</label>
-        <small v-if="fieldErrors.permissions" class="text-red-500">{{ fieldErrors.permissions[0] }}</small>
+        <small v-if="fieldErrors.permissions" class="p-error">{{ fieldErrors.permissions[0] }}</small>
         <PermissionSelector
           v-model="form.permissions"
           :invalid="!!fieldErrors.permissions"

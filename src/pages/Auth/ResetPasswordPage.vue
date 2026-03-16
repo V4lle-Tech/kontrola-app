@@ -79,7 +79,7 @@ function goToLogin() {
           :invalid="!!fieldErrors.email"
           autocomplete="email"
         />
-        <small v-if="fieldErrors.email" class="text-red-500">{{ fieldErrors.email[0] }}</small>
+        <small v-if="fieldErrors.email" class="p-error">{{ fieldErrors.email[0] }}</small>
       </div>
 
       <div class="flex flex-col gap-1">
@@ -92,7 +92,7 @@ function goToLogin() {
           input-class="w-full"
           autocomplete="new-password"
         />
-        <small v-if="fieldErrors.password" class="text-red-500">{{ fieldErrors.password[0] }}</small>
+        <small v-if="fieldErrors.password" class="p-error">{{ fieldErrors.password[0] }}</small>
       </div>
 
       <div class="flex flex-col gap-1">
@@ -106,7 +106,7 @@ function goToLogin() {
           input-class="w-full"
           autocomplete="new-password"
         />
-        <small v-if="fieldErrors.passwordConfirmation" class="text-red-500">{{ fieldErrors.passwordConfirmation[0] }}</small>
+        <small v-if="fieldErrors.passwordConfirmation" class="p-error">{{ fieldErrors.passwordConfirmation[0] }}</small>
       </div>
 
       <Button

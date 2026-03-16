@@ -220,7 +220,7 @@ onMounted(() => {
                   </button>
                   <button
                     type="button"
-                    class="rounded p-0.5 text-muted-color hover:text-red-500"
+                    class="rounded p-0.5 text-muted-color hover:text-color"
                     @click="deleteTag(tag)"
                   >
                     <i class="pi pi-times text-xs" />
@@ -257,7 +257,7 @@ onMounted(() => {
                   </button>
                   <button
                     type="button"
-                    class="rounded p-0.5 text-muted-color hover:text-red-500"
+                    class="rounded p-0.5 text-muted-color hover:text-color"
                     @click="deleteTag(tag)"
                   >
                     <i class="pi pi-times text-xs" />
@@ -290,7 +290,7 @@ onMounted(() => {
             :invalid="!!fieldErrors.name"
             placeholder="Ej: Senior, Urgente, Remoto"
           />
-          <small v-if="fieldErrors.name" class="text-red-500">{{ fieldErrors.name[0] }}</small>
+          <small v-if="fieldErrors.name" class="p-error">{{ fieldErrors.name[0] }}</small>
         </div>
 
         <div class="flex flex-col gap-1">
@@ -316,7 +316,7 @@ onMounted(() => {
             option-value="value"
             class="w-full"
           />
-          <small v-if="fieldErrors.type" class="text-red-500">{{ fieldErrors.type[0] }}</small>
+          <small v-if="fieldErrors.type" class="p-error">{{ fieldErrors.type[0] }}</small>
         </div>
 
         <div class="flex justify-end gap-2">
