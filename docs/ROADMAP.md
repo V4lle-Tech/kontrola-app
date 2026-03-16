@@ -3,7 +3,7 @@
 > Plan de migración del frontend Laravel/Inertia → SPA Vue 3 standalone.
 > Cada fase tiene criterios de salida binarios (pasa/no pasa). No se avanza sin cumplir TODOS.
 >
-> **Estado: COMPLETO** — Todas las fases (0-13) implementadas y gates aprobados.
+> **Estado: EN PROGRESO** — Fases 0-13 completadas. Fases 14-19 añadidas tras validación contra repo original.
 
 ---
 
@@ -25,8 +25,14 @@
 | 11   | Admin Panel                   | 10     | COMPLETADO |
 | 12   | Candidate Portal              | 8      | COMPLETADO |
 | 13   | Polish & Production           | 6      | COMPLETADO |
+| 14   | Shared Components & Composables | 10   | PENDIENTE  |
+| 15   | Auth & Access Gaps            | 7      | PENDIENTE  |
+| 16   | Recruitment Gaps              | 8      | PENDIENTE  |
+| 17   | Admin & Candidate Gaps        | 8      | PENDIENTE  |
+| 18   | Types & Layouts               | 6      | PENDIENTE  |
+| 19   | Final Validation              | 4      | PENDIENTE  |
 
-**Total**: 107 tareas — 107 completadas (100%)
+**Total**: 150 tareas — 107 completadas (71%)
 
 ---
 
@@ -440,6 +446,178 @@
 | `KpiCards.vue` | `src/components/recruitment/metrics/` | 6 |
 | `SidebarMenu.vue` | `src/components/shared/` | 2 |
 | `useCandidateAuthStore.ts` | `src/stores/` | 12 |
+
+---
+
+## Fase 14 — Shared Components & Composables
+
+**Objetivo**: Componentes compartidos y composables faltantes detectados en validación contra repo original.
+
+### Tareas
+
+| # | Tarea | Descripción |
+|---|-------|-------------|
+| F14-01 | Crear `DeleteConfirmDialog.vue` | Dialog reutilizable de confirmación de eliminación con slot para mensaje |
+| F14-02 | Crear `StatusBadge.vue` | Badge de estado con colores semánticos (severity mapping) |
+| F14-03 | Crear `StatusDropdown.vue` | Dropdown para cambiar estado de un recurso con confirmación |
+| F14-04 | Crear `ListControls.vue` | Toolbar con refresh, export, view toggle para listas |
+| F14-05 | Crear `SelectionToolbar.vue` | Toolbar flotante para bulk actions (delete, tag, export) |
+| F14-06 | Crear `ImageUploadInput.vue` | Input de upload de imagen con preview, crop opcional |
+| F14-07 | Crear `TagInput.vue` + `TagFormModal.vue` | Selector de tags con creación inline y modal de edición |
+| F14-08 | Crear `useListPage` composable | Abstracción reutilizable: paginación, search, sort, filters |
+| F14-09 | Crear `useSelection` composable | Multi-select state con select all, toggle, clear |
+| F14-10 | Crear `useUnsavedChanges` composable | Route leave guard para formularios con cambios sin guardar |
+
+### Gate
+
+- [ ] `DeleteConfirmDialog` se usa en al menos 3 módulos (candidates, roles, documents)
+- [ ] `StatusBadge` renderiza severities correctas
+- [ ] `useListPage` reduce boilerplate en páginas con DataTable
+- [ ] `useSelection` funciona con bulk tag y bulk delete
+- [ ] `useUnsavedChanges` bloquea navegación con cambios pendientes
+- [ ] `bun run type-check` pasa sin errores
+- [ ] `bun run lint` pasa sin warnings
+
+---
+
+## Fase 15 — Auth & Access Gaps
+
+**Objetivo**: Funcionalidades faltantes de auth y control de acceso.
+
+### Tareas
+
+| # | Tarea | Descripción |
+|---|-------|-------------|
+| F15-01 | Crear `AcceptInvitationPage.vue` | Página para aceptar invitación con token, form de contraseña |
+| F15-02 | Crear `UserEdit.vue` component | Componente separado de edición de usuario (nombre, email, active) |
+| F15-03 | Crear `UserRoles.vue` component | Asignación de roles a usuario con checkboxes |
+| F15-04 | Crear `InvitationsList.vue` component | Lista de invitaciones pendientes con resend/revoke |
+| F15-05 | Crear `useModules` composable | Feature flags: `isModuleEnabled('recruitment')` para sidebar y guards |
+| F15-06 | Crear `useImportProgress` composable | Tracking de progreso de import con polling/SSE |
+| F15-07 | Crear `NotFoundPage.vue` | Página 404 con catch-all route |
+
+### Gate
+
+- [ ] AcceptInvitation recibe token por URL, muestra form, completa registro
+- [ ] UserEdit permite editar nombre/email/estado del usuario
+- [ ] UserRoles asigna/revoca roles con persist en API
+- [ ] InvitationsList muestra invitaciones con acciones resend/revoke
+- [ ] `useModules` controla visibilidad de rutas y menú
+- [ ] 404 page captura rutas inexistentes
+- [ ] `bun run type-check` pasa sin errores
+- [ ] `bun run lint` pasa sin warnings
+
+---
+
+## Fase 16 — Recruitment Gaps
+
+**Objetivo**: Features de reclutamiento faltantes en candidatos, job profiles y templates.
+
+### Tareas
+
+| # | Tarea | Descripción |
+|---|-------|-------------|
+| F16-01 | Crear `CandidateHistoryTab.vue` | Tab de historial de actividad del candidato (timeline de eventos) |
+| F16-02 | Crear `AssociateToJobProfilesModal.vue` | Modal para vincular candidato a perfiles de puesto |
+| F16-03 | Crear `AddCandidatesModal.vue` | Modal en JobProfile para agregar candidatos existentes |
+| F16-04 | Crear `InviteCandidatesModal.vue` | Modal para invitar candidatos por email a un perfil |
+| F16-05 | Crear `VacanciesSection.vue` | Sección de vacantes embebida en JobProfileDetail con CRUD inline |
+| F16-06 | Crear `QuestionsForm.vue` | Formulario de preguntas de screening para perfiles de puesto |
+| F16-07 | Crear `JobProfileTemplatesPage.vue` | Página CRUD de templates de perfil de puesto |
+| F16-08 | Crear `ValidationConfigForm.vue` | Formulario de configuración de validación de documentos |
+
+### Gate
+
+- [ ] CandidateHistoryTab muestra timeline completa de eventos
+- [ ] AssociateToJobProfilesModal vincula candidato a perfil(es)
+- [ ] AddCandidatesModal busca y agrega candidatos a perfil
+- [ ] VacanciesSection permite CRUD de vacantes desde el perfil
+- [ ] QuestionsForm crea/edita preguntas de screening
+- [ ] JobProfileTemplatesPage CRUD completo con DataTable
+- [ ] ValidationConfigForm configura max_size, extensions, expiration
+- [ ] `bun run type-check` pasa sin errores
+- [ ] `bun run lint` pasa sin warnings
+
+---
+
+## Fase 17 — Admin & Candidate Portal Gaps
+
+**Objetivo**: Páginas faltantes del admin panel y portal de candidatos.
+
+### Tareas
+
+| # | Tarea | Descripción |
+|---|-------|-------------|
+| F17-01 | Crear `AdminModulesPage.vue` | CRUD de módulos del sistema (nombre, descripción, isCore, price) |
+| F17-02 | Crear `AdminReportsPage.vue` | Reportes admin: tenant growth, revenue, module usage con charts |
+| F17-03 | Crear `SystemHealthPage.vue` | Health check: failed jobs, errores recientes, retry/delete actions |
+| F17-04 | Crear `CandidateGuestLayout.vue` | Layout para páginas de candidato sin auth (login, check-email, link-expired) |
+| F17-05 | Crear `CheckEmailPage.vue` | Página post-login magic link: "revisa tu correo" |
+| F17-06 | Crear `LinkExpiredPage.vue` | Página de link expirado con opción de reenviar |
+| F17-07 | Crear `DenySkipModal.vue` | Modal para rechazar solicitud de skip de stage con motivo |
+| F17-08 | Crear `ApplicationSuccessPage.vue` | Página de éxito post-aplicación con next steps |
+
+### Gate
+
+- [ ] AdminModulesPage CRUD completo funcional
+- [ ] AdminReportsPage muestra gráficas de crecimiento y revenue
+- [ ] SystemHealthPage lista failed jobs con retry/delete
+- [ ] CandidateGuestLayout se usa en login, check-email, link-expired
+- [ ] CheckEmailPage muestra mensaje apropiado post magic link
+- [ ] LinkExpiredPage ofrece reenvío de link
+- [ ] DenySkipModal captura motivo de rechazo
+- [ ] ApplicationSuccessPage muestra confirmación
+- [ ] `bun run type-check` pasa sin errores
+- [ ] `bun run lint` pasa sin warnings
+
+---
+
+## Fase 18 — Types & Layouts
+
+**Objetivo**: Tipos TypeScript faltantes y mejoras de arquitectura.
+
+### Tareas
+
+| # | Tarea | Descripción |
+|---|-------|-------------|
+| F18-01 | Crear `types/admin.ts` | Interfaces: AdminKPI, SystemHealthItem, AdminModule, AdminReport |
+| F18-02 | Crear `types/portal.ts` | Interfaces: CandidateProfile, PortalApplication, MagicLinkRequest |
+| F18-03 | Crear `types/profile.ts` | Interfaces: UserProfile, ProfileUpdateRequest, PasswordChange |
+| F18-04 | Crear `types/template.ts` | Interfaces: JobProfileTemplate, TemplateStep, TemplateCreateRequest |
+| F18-05 | Integrar permission-gated actions | Añadir `v-if="can('resource.action')"` en botones CRUD de todos los módulos |
+| F18-06 | Registrar nuevas rutas en router | Añadir rutas para todas las páginas nuevas (F15-F17) al router |
+
+### Gate
+
+- [ ] Todos los tipos nuevos importados y usados sin `any`
+- [ ] Permission gates visibles en candidates, roles, documents, job profiles
+- [ ] Todas las rutas nuevas registradas y navegables
+- [ ] `bun run type-check` pasa sin errores
+- [ ] `bun run lint` pasa sin warnings
+
+---
+
+## Fase 19 — Final Validation
+
+**Objetivo**: Validación final contra repo original, smoke tests, build limpio.
+
+### Tareas
+
+| # | Tarea | Descripción |
+|---|-------|-------------|
+| F19-01 | Actualizar smoke tests | Agregar tests para nuevas rutas y componentes |
+| F19-02 | Auditoría de semantic tokens | Verificar 0 colores Tailwind directos en archivos nuevos |
+| F19-03 | Auditoría de imports | Verificar 0 imports directos de axios en pages/components |
+| F19-04 | Build final + type-check | Verificar que todo compila y pasa sin errores |
+
+### Gate
+
+- [ ] Smoke tests cubren todas las rutas (originales + nuevas)
+- [ ] 0 violaciones de F07 (colores directos)
+- [ ] 0 violaciones de F01 (axios en componentes)
+- [ ] 0 `any` en codebase
+- [ ] `bun run build` sin errores ni warnings
+- [ ] CI pipeline pasa completo
 
 ---
 
