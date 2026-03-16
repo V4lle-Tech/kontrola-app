@@ -20,7 +20,7 @@ describe('apiClient', () => {
       }
     ).handlers
 
-    const interceptor = handlers[0]!
+    const interceptor = handlers[0] as (typeof handlers)[number]
     const config = interceptor.fulfilled({
       headers: {},
     } as InternalAxiosRequestConfig)
@@ -35,7 +35,7 @@ describe('apiClient', () => {
       }
     ).handlers
 
-    const interceptor = handlers[0]!
+    const interceptor = handlers[0] as (typeof handlers)[number]
     const config = interceptor.fulfilled({
       headers: {},
     } as InternalAxiosRequestConfig)

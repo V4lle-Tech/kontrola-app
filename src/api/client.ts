@@ -10,7 +10,7 @@ let refreshQueue: Array<{
 }> = []
 
 function processQueue(error: unknown, token: string | null): void {
-  refreshQueue.forEach((p) => (error ? p.reject(error) : p.resolve(token!)))
+  refreshQueue.forEach((p) => (error ? p.reject(error) : p.resolve(token as string)))
   refreshQueue = []
 }
 
