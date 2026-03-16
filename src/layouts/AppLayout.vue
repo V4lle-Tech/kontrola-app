@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import Button from 'primevue/button'
+import SidebarMenu from '@/components/shared/SidebarMenu.vue'
 import { useSidebar } from '@/composables/useSidebar'
+import { useNavigation } from '@/composables/useNavigation'
 import { useAuthStore } from '@/stores/useAuthStore'
 
 const router = useRouter()
 const auth = useAuthStore()
 const { collapsed, isMobile, mobileOpen, toggle, closeMobile } = useSidebar()
+const { sections } = useNavigation()
 
 async function logout() {
   await auth.logout()
@@ -42,7 +45,11 @@ async function logout() {
 
       <!-- Navigation -->
       <nav class="flex-1 overflow-y-auto p-2">
-        <slot name="sidebar" />
+        <SidebarMenu
+          :sections="sections"
+          :collapsed="collapsed && !isMobile"
+          @navigate="closeMobile"
+        />
       </nav>
 
       <!-- Sidebar footer -->
