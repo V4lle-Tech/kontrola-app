@@ -123,7 +123,7 @@ onMounted(() => { void loadVacancies(); void api.getTags('candidate').then((t) =
         <div v-else-if="loadingBoard" class="flex h-full items-center justify-center">
           <i class="pi pi-spin pi-spinner text-3xl text-muted-color" />
         </div>
-        <KanbanBoard v-else-if="board" :board="board" :search="filterSearch" :filter-tag-ids="filterTags" @moved="loadBoard" @select="onSelectApp" />
+        <KanbanBoard v-else-if="board" :board="board" :search="filterSearch" :filter-tag-ids="filterTags" @moved="loadBoard" @select="onSelectApp" @approval-required="onSkipStage" />
       </div>
     </div>
     <CandidateProfileDrawer v-model:visible="showDrawer" :application="selectedApp" @view-history="onViewHistory" @final-decision="onFinalDecision" @add-note="onAddNote" @skip-stage="onSkipStage" />

@@ -16,6 +16,7 @@ const props = withDefaults(defineProps<Props>(), { search: '', filterTagIds: () 
 const emit = defineEmits<{
   select: [application: PipelineApplication]
   moved: []
+  approvalRequired: [application: PipelineApplication, targetStageId: string]
 }>()
 
 const api = useRecruitmentApi()
@@ -74,6 +75,12 @@ async function onDragEnd(evt: { from: HTMLElement; to: HTMLElement; oldIndex: nu
   if (!toCol) return
   const app = toCol.applications[evt.newIndex]
   if (!app) return
+
+  if (toCol.requiresApproval) {
+    columns.value = buildColumns(props.board)
+    emit('approvalRequired', app, toStageId)
+    return
+  }
 
   try {
     await api.moveApplication(app.id, { targetStageId: toStageId })
