@@ -32,25 +32,24 @@ function addStage() {
 
 function removeStage(index: number) {
   model.value.splice(index, 1)
-  // Reorder
-  model.value.forEach((stage, idx) => {
-    stage.order = idx + 1
-  })
+  reorder()
 }
 
 function moveUp(index: number) {
   if (index <= 0) return
   const item = model.value.splice(index, 1)[0] as StageItem
   model.value.splice(index - 1, 0, item)
-  model.value.forEach((stage, idx) => {
-    stage.order = idx + 1
-  })
+  reorder()
 }
 
 function moveDown(index: number) {
   if (index >= model.value.length - 1) return
   const item = model.value.splice(index, 1)[0] as StageItem
   model.value.splice(index + 1, 0, item)
+  reorder()
+}
+
+function reorder() {
   model.value.forEach((stage, idx) => {
     stage.order = idx + 1
   })
