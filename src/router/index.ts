@@ -92,6 +92,12 @@ const appRoutes: RouteRecordRaw[] = [
     component: () => import('@/pages/Recruitment/SyndicationDashboardPage.vue'),
     meta: { requiresAuth: true, permission: 'syndication.view' },
   },
+  {
+    path: '/recruitment/job-boards',
+    name: 'job-boards',
+    component: () => import('@/pages/Recruitment/JobBoardsPage.vue'),
+    meta: { requiresAuth: true, permission: 'syndication.manage' },
+  },
 
   // Documents
   {

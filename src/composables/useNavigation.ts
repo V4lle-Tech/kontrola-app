@@ -30,6 +30,7 @@ const menuSections: MenuSection[] = [
       { label: 'Saltos de Etapa', icon: 'pi pi-forward', to: '/recruitment/skip-requests', permission: 'pipeline.manage' },
       { label: 'Métricas', icon: 'pi pi-chart-bar', to: '/recruitment/metrics', permission: 'metrics.view' },
       { label: 'Publicaciones', icon: 'pi pi-send', to: '/recruitment/syndication', permission: 'syndication.view' },
+      { label: 'Portales', icon: 'pi pi-globe', to: '/recruitment/job-boards', permission: 'syndication.manage' },
     ],
   },
   {
