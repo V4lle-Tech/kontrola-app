@@ -19,6 +19,13 @@ import type {
   CreateTagRequest,
   UpdateTagRequest,
   Application,
+  PipelineBoard,
+  PipelineApplication,
+  ApplicationNote,
+  ApplicationHistory,
+  MoveApplicationRequest,
+  CreateApplicationNoteRequest,
+  SkipStageRequest,
 } from '@/types/recruitment'
 
 export interface CandidateFilters extends PaginationParams {
@@ -176,6 +183,51 @@ export function useRecruitmentApi() {
     return data
   }
 
+  // ── Pipeline ─────────────────────────────────────────────────────
+
+  async function getPipelineBoard(vacancyId: string): Promise<PipelineBoard> {
+    const { data } = await apiClient.get<PipelineBoard>(`/vacancies/${vacancyId}/pipeline`)
+    return data
+  }
+
+  async function moveApplication(applicationId: string, request: MoveApplicationRequest): Promise<PipelineApplication> {
+    const { data } = await apiClient.post<PipelineApplication>(`/applications/${applicationId}/move`, request)
+    return data
+  }
+
+  async function getApplicationNotes(applicationId: string): Promise<ApplicationNote[]> {
+    const { data } = await apiClient.get<ApplicationNote[]>(`/applications/${applicationId}/notes`)
+    return data
+  }
+
+  async function createApplicationNote(applicationId: string, request: CreateApplicationNoteRequest): Promise<ApplicationNote> {
+    const { data } = await apiClient.post<ApplicationNote>(`/applications/${applicationId}/notes`, request)
+    return data
+  }
+
+  async function getApplicationHistory(applicationId: string): Promise<ApplicationHistory[]> {
+    const { data } = await apiClient.get<ApplicationHistory[]>(`/applications/${applicationId}/history`)
+    return data
+  }
+
+  async function getSkipRequests(params?: PaginationParams): Promise<PaginatedResponse<SkipStageRequest>> {
+    const { data } = await apiClient.get<PaginatedResponse<SkipStageRequest>>('/skip-requests', { params })
+    return data
+  }
+
+  async function approveSkipRequest(id: string): Promise<void> {
+    await apiClient.post(`/skip-requests/${id}/approve`)
+  }
+
+  async function rejectSkipRequest(id: string): Promise<void> {
+    await apiClient.post(`/skip-requests/${id}/reject`)
+  }
+
+  async function getActiveVacancies(): Promise<Vacancy[]> {
+    const { data } = await apiClient.get<Vacancy[]>('/vacancies', { params: { status: 'published', pageSize: 100 } })
+    return (data as unknown as PaginatedResponse<Vacancy>).items
+  }
+
   return {
     // Candidates
     getCandidates,
@@ -210,5 +262,15 @@ export function useRecruitmentApi() {
     bulkRemoveTags,
     // Applications
     getCandidateApplications,
+    // Pipeline
+    getPipelineBoard,
+    moveApplication,
+    getApplicationNotes,
+    createApplicationNote,
+    getApplicationHistory,
+    getSkipRequests,
+    approveSkipRequest,
+    rejectSkipRequest,
+    getActiveVacancies,
   }
 }

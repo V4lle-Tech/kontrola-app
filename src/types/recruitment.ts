@@ -165,6 +165,75 @@ export interface Application {
   createdAt: string
 }
 
+// — Pipeline —
+export interface PipelineBoard {
+  vacancy: Vacancy
+  selectionProcess: SelectionProcess
+  stages: PipelineStage[]
+}
+
+export interface PipelineStage {
+  stage: SelectionStage
+  applications: PipelineApplication[]
+  count: number
+}
+
+export interface PipelineApplication {
+  id: string
+  candidateId: string
+  candidateName: string
+  candidateEmail: string
+  status: ApplicationStatus
+  daysInStage: number
+  totalDays: number
+  tags: Tag[]
+  score: number | null
+  currentStageId: string
+  createdAt: string
+}
+
+export interface ApplicationNote {
+  id: string
+  applicationId: string
+  content: string
+  authorName: string
+  createdAt: string
+}
+
+export interface MoveApplicationRequest {
+  targetStageId: string
+  reason?: string
+}
+
+export interface CreateApplicationNoteRequest {
+  content: string
+}
+
+export interface ApplicationHistory {
+  id: string
+  applicationId: string
+  fromStageId: string | null
+  toStageId: string
+  fromStageName: string | null
+  toStageName: string
+  reason: string | null
+  authorName: string
+  createdAt: string
+}
+
+export interface SkipStageRequest {
+  id: string
+  applicationId: string
+  fromStageId: string
+  toStageId: string
+  fromStageName: string
+  toStageName: string
+  reason: string
+  requestedBy: string
+  status: 'pending' | 'approved' | 'rejected'
+  createdAt: string
+}
+
 // — Tags —
 export interface Tag {
   id: string
