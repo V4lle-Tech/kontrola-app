@@ -5,8 +5,9 @@ import MultiSelect from 'primevue/multiselect'
 import Button from 'primevue/button'
 import AppLayout from '@/layouts/AppLayout.vue'
 import KanbanBoard from '@/components/recruitment/KanbanBoard.vue'
+import CandidateProfileDrawer from '@/components/recruitment/CandidateProfileDrawer.vue'
 import { useRecruitmentApi } from '@/composables/api/useRecruitmentApi'
-import type { Vacancy, Tag, PipelineBoard } from '@/types/recruitment'
+import type { Vacancy, Tag, PipelineBoard, PipelineApplication } from '@/types/recruitment'
 
 const api = useRecruitmentApi()
 const vacancies = ref<Vacancy[]>([])
@@ -18,6 +19,10 @@ const availableTags = ref<Tag[]>([])
 const filterTags = ref<string[]>([])
 const filterSearch = ref('')
 const showFilters = ref(false)
+const selectedApp = ref<PipelineApplication | null>(null)
+const showDrawer = ref(false)
+
+function onSelectApp(app: PipelineApplication) { selectedApp.value = app; showDrawer.value = true }
 
 const selectedVacancy = computed(() => vacancies.value.find((v) => v.id === selectedVacancyId.value) ?? null)
 const vacancyOptions = computed(() => vacancies.value.map((v) => ({ label: v.jobProfile?.title ?? v.slug, value: v.id, subtitle: v.slug })))
@@ -100,8 +105,9 @@ onMounted(() => { void loadVacancies(); void api.getTags('candidate').then((t) =
         <div v-else-if="loadingBoard" class="flex h-full items-center justify-center">
           <i class="pi pi-spin pi-spinner text-3xl text-muted-color" />
         </div>
-        <KanbanBoard v-else-if="board" :board="board" :search="filterSearch" :filter-tag-ids="filterTags" @moved="loadBoard" />
+        <KanbanBoard v-else-if="board" :board="board" :search="filterSearch" :filter-tag-ids="filterTags" @moved="loadBoard" @select="onSelectApp" />
       </div>
     </div>
+    <CandidateProfileDrawer v-model:visible="showDrawer" :application="selectedApp" />
   </AppLayout>
 </template>

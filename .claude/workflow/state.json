@@ -1,7 +1,7 @@
 {
   "currentPhase": 5,
   "currentTask": null,
-  "completedTasks": [],
+  "completedTasks": ["F5-01", "F5-02", "F5-03", "F5-04", "F5-05"],
   "activeFeature": null,
   "checkpoint": null,
   "gateResults": {
