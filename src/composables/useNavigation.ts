@@ -29,6 +29,7 @@ const menuSections: MenuSection[] = [
       { label: 'Pipeline', icon: 'pi pi-arrow-right-arrow-left', to: '/recruitment/pipeline', permission: 'pipeline.view' },
       { label: 'Saltos de Etapa', icon: 'pi pi-forward', to: '/recruitment/skip-requests', permission: 'pipeline.manage' },
       { label: 'Métricas', icon: 'pi pi-chart-bar', to: '/recruitment/metrics', permission: 'metrics.view' },
+      { label: 'Publicaciones', icon: 'pi pi-send', to: '/recruitment/syndication', permission: 'syndication.view' },
     ],
   },
   {
