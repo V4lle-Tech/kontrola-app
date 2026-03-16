@@ -2,6 +2,7 @@
 import { useRouter } from 'vue-router'
 import Button from 'primevue/button'
 import SidebarMenu from '@/components/shared/SidebarMenu.vue'
+import ThemeToggle from '@/components/shared/ThemeToggle.vue'
 import { useSidebar } from '@/composables/useSidebar'
 import { useNavigation } from '@/composables/useNavigation'
 import { useAuthStore } from '@/stores/useAuthStore'
@@ -78,6 +79,8 @@ async function logout() {
         <div class="flex-1" />
 
         <slot name="topbar" />
+
+        <ThemeToggle />
 
         <Button
           icon="pi pi-sign-out"
