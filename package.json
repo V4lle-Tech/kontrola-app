@@ -15,11 +15,12 @@
     "api:generate": "openapi-typescript-codegen --input ${OPENAPI_SPEC_URL:-https://api.kontrola.com.mx/swagger/v1/swagger.json} --output src/api/generated --client axios --useOptions --useUnionTypes"
   },
   "dependencies": {
+    "@fontsource-variable/instrument-sans": "^5.2.8",
+    "@primevue/themes": "^4.3.3",
     "axios": "^1.7.9",
     "pinia": "^2.3.1",
-    "primevue": "^4.3.3",
-    "@primevue/themes": "^4.3.3",
     "primeicons": "^7.0.0",
+    "primevue": "^4.3.3",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
   },
