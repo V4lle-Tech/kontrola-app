@@ -57,6 +57,12 @@ const appRoutes: RouteRecordRaw[] = [
     meta: { requiresAuth: true, permission: 'vacancies.view' },
   },
   {
+    path: '/recruitment/tags',
+    name: 'tags',
+    component: () => import('@/pages/Recruitment/TagsPage.vue'),
+    meta: { requiresAuth: true, permission: 'tags.view' },
+  },
+  {
     path: '/recruitment/selection-processes',
     name: 'selection-processes',
     component: () => import('@/pages/Recruitment/SelectionProcessesPage.vue'),

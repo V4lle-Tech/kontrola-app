@@ -24,6 +24,7 @@ const menuSections: MenuSection[] = [
       { label: 'Candidatos', icon: 'pi pi-users', to: '/recruitment/candidates', permission: 'candidates.view' },
       { label: 'Perfiles de Puesto', icon: 'pi pi-briefcase', to: '/recruitment/job-profiles', permission: 'job-profiles.view' },
       { label: 'Vacantes', icon: 'pi pi-megaphone', to: '/recruitment/vacancies', permission: 'vacancies.view' },
+      { label: 'Etiquetas', icon: 'pi pi-tags', to: '/recruitment/tags', permission: 'tags.view' },
       { label: 'Procesos', icon: 'pi pi-sitemap', to: '/recruitment/selection-processes', permission: 'selection-processes.view' },
       { label: 'Pipeline', icon: 'pi pi-arrow-right-arrow-left', to: '/recruitment/pipeline', permission: 'pipeline.view' },
     ],
