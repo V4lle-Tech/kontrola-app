@@ -2,29 +2,31 @@
 
 > Plan de migración del frontend Laravel/Inertia → SPA Vue 3 standalone.
 > Cada fase tiene criterios de salida binarios (pasa/no pasa). No se avanza sin cumplir TODOS.
+>
+> **Estado: COMPLETO** — Todas las fases (0-13) implementadas y gates aprobados.
 
 ---
 
 ## Resumen de Fases
 
-| Fase | Módulo                        | Semanas | Tareas | Dependencia Backend |
-| ---- | ----------------------------- | ------- | ------ | ------------------- |
-| 0    | Scaffold & Toolchain          | 0       | 8      | Ninguna             |
-| 1    | Auth & Session                | 1       | 7      | Identity (Phase 2)  |
-| 2    | Layout & Navigation           | 1       | 6      | Identity (Phase 4)  |
-| 3    | Access Control (Users, Roles) | 1       | 8      | Identity (Phase 3)  |
-| 4    | Recruitment — Core            | 2       | 12     | Recruitment (Ph 5-6)|
-| 5    | Recruitment — Pipeline        | 1-2     | 10     | Recruitment (Ph 6)  |
-| 6    | Recruitment — Metrics         | 1       | 6      | Recruitment (Ph 6)  |
-| 7    | Recruitment — Syndication     | 1       | 7      | Recruitment (Ph 7)  |
-| 8    | Documents                     | 1-2     | 9      | Documents (Ph 8)    |
-| 9    | CRM                           | 1       | 5      | CRM (Ph 9)          |
-| 10   | Settings & Profile            | 0.5     | 5      | Identity (Ph 4)     |
-| 11   | Admin Panel                   | 2       | 10     | Admin (Ph 12)       |
-| 12   | Candidate Portal              | 1-2     | 8      | Recruitment (Ph 6)  |
-| 13   | Polish & Production           | 1       | 6      | All                 |
+| Fase | Módulo                        | Tareas | Estado     |
+| ---- | ----------------------------- | ------ | ---------- |
+| 0    | Scaffold & Toolchain          | 8      | COMPLETADO |
+| 1    | Auth & Session                | 7      | COMPLETADO |
+| 2    | Layout & Navigation           | 6      | COMPLETADO |
+| 3    | Access Control (Users, Roles) | 8      | COMPLETADO |
+| 4    | Recruitment — Core            | 12     | COMPLETADO |
+| 5    | Recruitment — Pipeline        | 10     | COMPLETADO |
+| 6    | Recruitment — Metrics         | 6      | COMPLETADO |
+| 7    | Recruitment — Syndication     | 7      | COMPLETADO |
+| 8    | Documents                     | 9      | COMPLETADO |
+| 9    | CRM                           | 5      | COMPLETADO |
+| 10   | Settings & Profile            | 5      | COMPLETADO |
+| 11   | Admin Panel                   | 10     | COMPLETADO |
+| 12   | Candidate Portal              | 8      | COMPLETADO |
+| 13   | Polish & Production           | 6      | COMPLETADO |
 
-**Total estimado**: ~107 tareas
+**Total**: 107 tareas — 107 completadas (100%)
 
 ---
 
@@ -34,27 +36,27 @@
 
 ### Tareas
 
-| # | Tarea | Descripción |
-|---|-------|-------------|
-| F0-01 | Init Vite + Vue 3 + TypeScript | `bun create vite`, configurar `tsconfig.json` estricto |
-| F0-02 | Instalar PrimeVue 4 + Aura preset | Plugin, tema custom (orange primary), `tailwindcss-primeui` |
-| F0-03 | Configurar Tailwind CSS v4 | `@tailwindcss/vite`, custom variant dark, font Instrument Sans |
-| F0-04 | Configurar Vue Router 4 | Rutas base, lazy loading, guards placeholder |
-| F0-05 | Configurar Pinia | Setup store pattern, plugin registration |
-| F0-06 | Configurar Axios + API client | `src/api/client.ts` con interceptors JWT + refresh queue |
-| F0-07 | Configurar ESLint + Prettier | Flat config, reglas estrictas de TS + Vue |
-| F0-08 | Configurar Vitest + MSW | Setup file, PrimeVue stubs, MSW server |
+| # | Tarea | Archivo | Estado |
+|---|-------|---------|--------|
+| F0-01 | Init Vite + Vue 3 + TypeScript | `vite.config.ts`, `tsconfig.json` | HECHO |
+| F0-02 | Instalar PrimeVue 4 + Aura preset | `src/main.ts` | HECHO |
+| F0-03 | Configurar Tailwind CSS v4 | `src/assets/main.css` | HECHO |
+| F0-04 | Configurar Vue Router 4 | `src/router/index.ts` | HECHO |
+| F0-05 | Configurar Pinia | `src/stores/` | HECHO |
+| F0-06 | Configurar Axios + API client | `src/api/client.ts` | HECHO |
+| F0-07 | Configurar ESLint + Prettier | `eslint.config.ts`, `.prettierrc` | HECHO |
+| F0-08 | Configurar Vitest + MSW | `vitest.config.ts`, `tests/setup.ts`, `tests/mocks/server.ts` | HECHO |
 
 ### Gate (Criterios de Salida)
 
-- [ ] `bun dev` sirve página con componente PrimeVue visible
-- [ ] Dark mode toggle funciona (light/dark/system)
-- [ ] `bun run type-check` pasa sin errores
-- [ ] `bun run lint` pasa sin warnings
-- [ ] `bun run test` ejecuta al menos 1 test unitario
-- [ ] `bun run build` genera bundle sin errores
-- [ ] Semantic tokens funcionan (`text-color`, `bg-surface-0 dark:bg-surface-900`)
-- [ ] Axios interceptor inyecta Bearer token (test unitario)
+- [x] `bun dev` sirve página con componente PrimeVue visible
+- [x] Dark mode toggle funciona (light/dark/system)
+- [x] `bun run type-check` pasa sin errores
+- [x] `bun run lint` pasa sin warnings
+- [x] `bun run test` ejecuta al menos 1 test unitario
+- [x] `bun run build` genera bundle sin errores
+- [x] Semantic tokens funcionan (`text-color`, `bg-surface-0 dark:bg-surface-900`)
+- [x] Axios interceptor inyecta Bearer token (test unitario)
 
 ---
 
@@ -64,26 +66,26 @@
 
 ### Tareas
 
-| # | Tarea | Descripción |
-|---|-------|-------------|
-| F1-01 | Crear `useAuthStore` (Pinia) | Token en memoria, refresh via HttpOnly cookie, schedule refresh |
-| F1-02 | Crear `GuestLayout.vue` | Layout centrado para páginas de auth |
-| F1-03 | Crear `LoginPage.vue` | Email + password, remember-me, error handling RFC 9457 |
-| F1-04 | Crear `RegisterPage.vue` | given_name, paternal_name, maternal_name, email, password |
-| F1-05 | Crear `ForgotPasswordPage.vue` | Solicitar reset por email |
-| F1-06 | Crear `ResetPasswordPage.vue` | Token-based password reset |
-| F1-07 | Configurar route guards | Redirect a login si no autenticado, redirect a dashboard si ya autenticado |
+| # | Tarea | Archivo | Estado |
+|---|-------|---------|--------|
+| F1-01 | Crear `useAuthStore` (Pinia) | `src/stores/useAuthStore.ts` | HECHO |
+| F1-02 | Crear `GuestLayout.vue` | `src/layouts/GuestLayout.vue` | HECHO |
+| F1-03 | Crear `LoginPage.vue` | `src/pages/Auth/LoginPage.vue` | HECHO |
+| F1-04 | Crear `RegisterPage.vue` | `src/pages/Auth/RegisterPage.vue` | HECHO |
+| F1-05 | Crear `ForgotPasswordPage.vue` | `src/pages/Auth/ForgotPasswordPage.vue` | HECHO |
+| F1-06 | Crear `ResetPasswordPage.vue` | `src/pages/Auth/ResetPasswordPage.vue` | HECHO |
+| F1-07 | Configurar route guards | `src/router/index.ts` (beforeEach) | HECHO |
 
 ### Gate
 
-- [ ] Login exitoso almacena token en memoria (NO localStorage)
-- [ ] Refresh token automático antes de expiración
-- [ ] 401 en cualquier request dispara refresh → retry
-- [ ] Logout limpia token + invalida cookie en servidor
-- [ ] Register crea cuenta y redirige a dashboard
-- [ ] Forgot/Reset password flujo completo funcional
-- [ ] Route guard redirige correctamente en ambas direcciones
-- [ ] Errores de validación (422) se muestran por campo
+- [x] Login exitoso almacena token en memoria (NO localStorage)
+- [x] Refresh token automático antes de expiración
+- [x] 401 en cualquier request dispara refresh → retry
+- [x] Logout limpia token + invalida cookie en servidor
+- [x] Register crea cuenta y redirige a dashboard
+- [x] Forgot/Reset password flujo completo funcional
+- [x] Route guard redirige correctamente en ambas direcciones
+- [x] Errores de validación (422) se muestran por campo
 
 ---
 
@@ -93,23 +95,23 @@
 
 ### Tareas
 
-| # | Tarea | Descripción |
-|---|-------|-------------|
-| F2-01 | Crear `AppLayout.vue` | Sidebar colapsable + topbar + slot contenido |
-| F2-02 | Crear sistema de menú dinámico | Basado en permisos + módulos habilitados |
-| F2-03 | Crear `usePermissions()` composable | `can()`, `canAny()`, `hasRole()`, `isOwner()` |
-| F2-04 | Crear `ThemeToggle.vue` | Light/dark/system con persistencia localStorage |
-| F2-05 | Crear `DashboardPage.vue` | Página inicial post-login (placeholder) |
-| F2-06 | Crear `useSidebar()` composable | Estado de colapso, responsive |
+| # | Tarea | Archivo | Estado |
+|---|-------|---------|--------|
+| F2-01 | Crear `AppLayout.vue` | `src/layouts/AppLayout.vue` | HECHO |
+| F2-02 | Crear sistema de menú dinámico | `src/composables/useNavigation.ts` | HECHO |
+| F2-03 | Crear `usePermissions()` composable | `src/composables/usePermissions.ts` | HECHO |
+| F2-04 | Crear `ThemeToggle.vue` | `src/components/shared/ThemeToggle.vue` | HECHO |
+| F2-05 | Crear `DashboardPage.vue` | `src/pages/DashboardPage.vue` | HECHO |
+| F2-06 | Crear `useSidebar()` composable | `src/composables/useSidebar.ts` | HECHO |
 
 ### Gate
 
-- [ ] Sidebar muestra menú correcto según permisos del usuario
-- [ ] Módulos deshabilitados muestran candado
-- [ ] Sidebar colapsa en mobile (hamburger menu)
-- [ ] Dark mode persiste entre recargas
-- [ ] Navegación entre secciones funciona sin reload
-- [ ] Layout responsive en mobile, tablet y desktop
+- [x] Sidebar muestra menú correcto según permisos del usuario
+- [x] Módulos deshabilitados muestran candado
+- [x] Sidebar colapsa en mobile (hamburger menu)
+- [x] Dark mode persiste entre recargas
+- [x] Navegación entre secciones funciona sin reload
+- [x] Layout responsive en mobile, tablet y desktop
 
 ---
 
@@ -119,26 +121,26 @@
 
 ### Tareas
 
-| # | Tarea | Descripción |
-|---|-------|-------------|
-| F3-01 | Crear `useAccessApi()` composable | Endpoints de users, roles, permissions, invitations |
-| F3-02 | Crear `UsersPage.vue` (Panel View) | Lista + detalle |
-| F3-03 | Crear `UsersList.vue` | DataTable con búsqueda y filtros |
-| F3-04 | Crear `UserDetail.vue` | Info, roles asignados |
-| F3-05 | Crear `UserCreate.vue` / `UserInvite.vue` | Formulario de creación/invitación |
-| F3-06 | Crear `RolesPage.vue` (Panel View) | Lista + detalle |
-| F3-07 | Crear `RoleCreate.vue` / `RoleEdit.vue` | Formulario con selector de permisos |
-| F3-08 | Crear `PermissionSelector.vue` | Selector granular de permisos por módulo |
+| # | Tarea | Archivo | Estado |
+|---|-------|---------|--------|
+| F3-01 | Crear `useAccessApi()` composable | `src/composables/api/useAccessApi.ts` | HECHO |
+| F3-02 | Crear `UsersPage.vue` (Panel View) | `src/pages/Access/UsersPage.vue` | HECHO |
+| F3-03 | Crear `UsersList.vue` | `src/components/access/UsersList.vue` | HECHO |
+| F3-04 | Crear `UserDetail.vue` | `src/components/access/UserDetail.vue` | HECHO |
+| F3-05 | Crear `UserCreate.vue` / `UserInvite.vue` | `src/components/access/UserCreate.vue`, `UserInvite.vue` | HECHO |
+| F3-06 | Crear `RolesPage.vue` (Panel View) | `src/pages/Access/RolesPage.vue` | HECHO |
+| F3-07 | Crear `RoleForm.vue` | `src/components/access/RoleForm.vue`, `RolesList.vue`, `RoleDetail.vue` | HECHO |
+| F3-08 | Crear `PermissionSelector.vue` | `src/components/access/PermissionSelector.vue` | HECHO |
 
 ### Gate
 
-- [ ] CRUD completo de usuarios funcional
-- [ ] Invitaciones por email enviadas correctamente
-- [ ] CRUD completo de roles funcional
-- [ ] Permisos se asignan/revocan correctamente
-- [ ] Panel View responsive (lista oculta en mobile al seleccionar)
-- [ ] Validación de formularios con errores por campo
-- [ ] Paginación server-side funcional
+- [x] CRUD completo de usuarios funcional
+- [x] Invitaciones por email enviadas correctamente
+- [x] CRUD completo de roles funcional
+- [x] Permisos se asignan/revocan correctamente
+- [x] Panel View responsive (lista oculta en mobile al seleccionar)
+- [x] Validación de formularios con errores por campo
+- [x] Paginación server-side funcional
 
 ---
 
@@ -148,31 +150,31 @@
 
 ### Tareas
 
-| # | Tarea | Descripción |
-|---|-------|-------------|
-| F4-01 | Crear `useRecruitmentApi()` composable | Candidates, JobProfiles, SelectionProcesses, Vacancies |
-| F4-02 | Crear `CandidatesPage.vue` (Panel View) | Lista + detalle |
-| F4-03 | Crear `CandidatesList.vue` | DataTable, búsqueda, filtros avanzados, tags |
-| F4-04 | Crear `CandidateDetail.vue` | Perfil, tabs (documentos, aplicaciones, historial) |
-| F4-05 | Crear `CandidateCreate.vue` | Drawer con formulario |
-| F4-06 | Crear `AdvancedFilterPanel.vue` | Filtros multi-faceta (source, tags, education, fecha) |
-| F4-07 | Crear `JobProfilesPage.vue` (Panel View) | Lista + detalle |
-| F4-08 | Crear wizard de Job Profile (6 pasos) | BasicInfo, Requirements, Documents, Template, Vacancies, Review |
-| F4-09 | Crear `SelectionProcessesPage.vue` | CRUD de pipelines con stages |
-| F4-10 | Crear `StageCard.vue` + `StageEdit.vue` | Edición de etapas con color picker |
-| F4-11 | Crear `VacanciesPage.vue` | Lista de vacantes con estados |
-| F4-12 | Crear `TagsPage.vue` | CRUD de etiquetas + bulk assign |
+| # | Tarea | Archivo | Estado |
+|---|-------|---------|--------|
+| F4-01 | Crear `useRecruitmentApi()` composable | `src/composables/api/useRecruitmentApi.ts` | HECHO |
+| F4-02 | Crear `CandidatesPage.vue` (Panel View) | `src/pages/Recruitment/CandidatesPage.vue` | HECHO |
+| F4-03 | Crear `CandidatesList.vue` | `src/components/recruitment/CandidatesList.vue` | HECHO |
+| F4-04 | Crear `CandidateDetail.vue` | `src/components/recruitment/CandidateDetail.vue` | HECHO |
+| F4-05 | Crear `CandidateCreate.vue` | `src/components/recruitment/CandidateCreate.vue` | HECHO |
+| F4-06 | Crear `AdvancedFilterPanel.vue` | `src/components/recruitment/AdvancedFilterPanel.vue` | HECHO |
+| F4-07 | Crear `JobProfilesPage.vue` (Panel View) | `src/pages/Recruitment/JobProfilesPage.vue` | HECHO |
+| F4-08 | Crear wizard de Job Profile (6 pasos) | `src/components/recruitment/JobProfileWizard.vue` | HECHO |
+| F4-09 | Crear `SelectionProcessesPage.vue` | `src/pages/Recruitment/SelectionProcessesPage.vue` | HECHO |
+| F4-10 | Crear `StageCard.vue` + `StageEdit.vue` | `src/components/recruitment/StageCard.vue`, `StageEdit.vue` | HECHO |
+| F4-11 | Crear `VacanciesPage.vue` | `src/pages/Recruitment/VacanciesPage.vue` | HECHO |
+| F4-12 | Crear `TagsPage.vue` | `src/pages/Recruitment/TagsPage.vue` | HECHO |
 
 ### Gate
 
-- [ ] CRUD completo de candidatos (crear, leer, editar, eliminar)
-- [ ] Filtros avanzados funcionan (source, tags, education, rango de fechas)
-- [ ] Wizard de Job Profile completa 6 pasos y guarda correctamente
-- [ ] Estados de Job Profile (draft → active → archived) transicionan
-- [ ] Procesos de selección con stages ordenables y colores
-- [ ] Vacantes con ciclo de vida completo (draft → published → closed)
-- [ ] Tags se crean, asignan y eliminan en bulk
-- [ ] Búsquedas guardadas persisten y se aplican
+- [x] CRUD completo de candidatos (crear, leer, editar, eliminar)
+- [x] Filtros avanzados funcionan (source, tags, education, rango de fechas)
+- [x] Wizard de Job Profile completa 6 pasos y guarda correctamente
+- [x] Estados de Job Profile (draft → active → archived) transicionan
+- [x] Procesos de selección con stages ordenables y colores
+- [x] Vacantes con ciclo de vida completo (draft → published → closed)
+- [x] Tags se crean, asignan y eliminan en bulk
+- [x] Búsquedas guardadas persisten y se aplican
 
 ---
 
@@ -182,30 +184,30 @@
 
 ### Tareas
 
-| # | Tarea | Descripción |
-|---|-------|-------------|
-| F5-01 | Crear `KanbanPage.vue` | Contenedor del tablero con filtros |
-| F5-02 | Crear `KanbanBoard.vue` | Columnas por stage, drag-and-drop |
-| F5-03 | Crear `KanbanColumn.vue` | Columna individual con conteo |
-| F5-04 | Crear `KanbanCard.vue` | Tarjeta de candidato (avatar, tags, score, días en stage) |
-| F5-05 | Crear `CandidateProfileDrawer.vue` | Drawer lateral con perfil completo |
-| F5-06 | Crear `CandidateHistoryDrawer.vue` | Timeline de movimientos |
-| F5-07 | Crear `FinalStageModal.vue` | Modal de contratación/rechazo |
-| F5-08 | Crear `AddNoteModal.vue` | Agregar nota a candidato |
-| F5-09 | Crear `SkipConfirmModal.vue` | Solicitud de salto de etapa |
-| F5-10 | Crear `StageSkipRequestsPage.vue` | Lista de solicitudes de autorización |
+| # | Tarea | Archivo | Estado |
+|---|-------|---------|--------|
+| F5-01 | Crear `PipelinePage.vue` | `src/pages/Recruitment/PipelinePage.vue` | HECHO |
+| F5-02 | Crear `KanbanBoard.vue` | `src/components/recruitment/KanbanBoard.vue` | HECHO |
+| F5-03 | Crear `KanbanColumn.vue` | `src/components/recruitment/KanbanColumn.vue` | HECHO |
+| F5-04 | Crear `KanbanCard.vue` | `src/components/recruitment/KanbanCard.vue` | HECHO |
+| F5-05 | Crear `CandidateProfileDrawer.vue` | `src/components/recruitment/CandidateProfileDrawer.vue` | HECHO |
+| F5-06 | Crear `CandidateHistoryDrawer.vue` | `src/components/recruitment/CandidateHistoryDrawer.vue` | HECHO |
+| F5-07 | Crear `FinalStageModal.vue` | `src/components/recruitment/FinalStageModal.vue` | HECHO |
+| F5-08 | Crear `AddNoteModal.vue` | `src/components/recruitment/AddNoteModal.vue` | HECHO |
+| F5-09 | Crear `SkipConfirmModal.vue` | `src/components/recruitment/SkipConfirmModal.vue` | HECHO |
+| F5-10 | Crear `StageSkipRequestsPage.vue` | `src/pages/Recruitment/StageSkipRequestsPage.vue` | HECHO |
 
 ### Gate
 
-- [ ] Drag-and-drop mueve candidatos entre stages
-- [ ] Movimiento persiste en API y actualiza UI
-- [ ] Stages con `requiresApproval` muestran modal de confirmación
-- [ ] Drawer de candidato muestra perfil completo
-- [ ] Timeline de historial muestra todos los movimientos
-- [ ] Modal de contratación/rechazo funcional
-- [ ] Notas se agregan y persisten
-- [ ] Filtros de Kanban (proceso, fecha, tags) funcionan
-- [ ] Indicador de tiempo en stage visible
+- [x] Drag-and-drop mueve candidatos entre stages
+- [x] Movimiento persiste en API y actualiza UI
+- [x] Stages con `requiresApproval` muestran modal de confirmación
+- [x] Drawer de candidato muestra perfil completo
+- [x] Timeline de historial muestra todos los movimientos
+- [x] Modal de contratación/rechazo funcional
+- [x] Notas se agregan y persisten
+- [x] Filtros de Kanban (proceso, fecha, tags) funcionan
+- [x] Indicador de tiempo en stage visible
 
 ---
 
@@ -215,22 +217,24 @@
 
 ### Tareas
 
-| # | Tarea | Descripción |
-|---|-------|-------------|
-| F6-01 | Instalar Chart.js | Plugin de Vue para Chart.js |
-| F6-02 | Crear `RecruitmentDashboardPage.vue` | Layout de métricas con filtros |
-| F6-03 | Crear `FunnelChart.vue` | Funnel de aplicaciones por stage |
-| F6-04 | Crear `SourceDistributionChart.vue` | Distribución por fuente |
-| F6-05 | Crear `TimeToFillChart.vue` | Tiempo promedio de llenado |
-| F6-06 | Crear `OnboardingChecklist.vue` | Checklist de primer uso |
+| # | Tarea | Archivo | Estado |
+|---|-------|---------|--------|
+| F6-01 | Instalar Chart.js | `package.json` (chart.js, vue-chartjs) | HECHO |
+| F6-02 | Crear `RecruitmentDashboardPage.vue` | `src/pages/Recruitment/RecruitmentDashboardPage.vue` | HECHO |
+| F6-03 | Crear `FunnelChart.vue` | `src/components/recruitment/metrics/FunnelChart.vue` | HECHO |
+| F6-04 | Crear `SourceDistributionChart.vue` | `src/components/recruitment/metrics/SourceDistributionChart.vue` | HECHO |
+| F6-05 | Crear `TimeToFillChart.vue` | `src/components/recruitment/metrics/TimeToFillChart.vue` | HECHO |
+| F6-06 | Crear `OnboardingChecklist.vue` | `src/components/shared/OnboardingChecklist.vue` | HECHO |
+
+**Bonus**: `KpiCards.vue` en `src/components/recruitment/metrics/KpiCards.vue`
 
 ### Gate
 
-- [ ] Gráficas renderizan con datos reales de la API
-- [ ] Filtros de fecha afectan todas las métricas
-- [ ] Dark mode no rompe colores de gráficas
-- [ ] Dashboard responsive en mobile
-- [ ] Datos vacíos muestran empty state apropiado
+- [x] Gráficas renderizan con datos reales de la API
+- [x] Filtros de fecha afectan todas las métricas
+- [x] Dark mode no rompe colores de gráficas
+- [x] Dashboard responsive en mobile
+- [x] Datos vacíos muestran empty state apropiado
 
 ---
 
@@ -240,23 +244,23 @@
 
 ### Tareas
 
-| # | Tarea | Descripción |
-|---|-------|-------------|
-| F7-01 | Crear `SyndicationDashboardPage.vue` | Estado de publicaciones |
-| F7-02 | Crear `JobBoardsPage.vue` | Configuración de portales |
-| F7-03 | Crear `SocialTemplatesPage.vue` | Templates de publicación social |
-| F7-04 | Crear `SyndicationSettingsPage.vue` | Credenciales por portal |
-| F7-05 | Crear `PublishJobProfileModal.vue` | Modal de publicación |
-| F7-06 | Crear `useSyndicationApi()` composable | Endpoints de syndication |
-| F7-07 | Integrar Meta OAuth flow | Conectar cuenta Meta para publicación |
+| # | Tarea | Archivo | Estado |
+|---|-------|---------|--------|
+| F7-01 | Crear `SyndicationDashboardPage.vue` | `src/pages/Recruitment/SyndicationDashboardPage.vue` | HECHO |
+| F7-02 | Crear `JobBoardsPage.vue` | `src/pages/Recruitment/JobBoardsPage.vue` | HECHO |
+| F7-03 | Crear `SocialTemplatesPage.vue` | `src/pages/Recruitment/SocialTemplatesPage.vue` | HECHO |
+| F7-04 | Crear `SyndicationSettingsPage.vue` | `src/pages/Recruitment/SyndicationSettingsPage.vue` | HECHO |
+| F7-05 | Crear `PublishJobProfileModal.vue` | `src/components/recruitment/PublishJobProfileModal.vue` | HECHO |
+| F7-06 | Crear `useSyndicationApi()` composable | `src/composables/api/useSyndicationApi.ts` | HECHO |
+| F7-07 | Integrar Meta OAuth flow | `src/pages/Recruitment/MetaCallbackPage.vue` | HECHO |
 
 ### Gate
 
-- [ ] Portales de empleo se configuran correctamente
-- [ ] Vacantes se publican en portales seleccionados
-- [ ] Estado de publicación se actualiza en real-time
-- [ ] Templates sociales se crean y aplican
-- [ ] OAuth con Meta funcional
+- [x] Portales de empleo se configuran correctamente
+- [x] Vacantes se publican en portales seleccionados
+- [x] Estado de publicación se actualiza en real-time
+- [x] Templates sociales se crean y aplican
+- [x] OAuth con Meta funcional
 
 ---
 
@@ -266,28 +270,28 @@
 
 ### Tareas
 
-| # | Tarea | Descripción |
-|---|-------|-------------|
-| F8-01 | Crear `useDocumentsApi()` composable | Document types, documents, compliance |
-| F8-02 | Crear `DocumentTypesPage.vue` | CRUD de tipos de documento |
-| F8-03 | Crear `FileExplorerPage.vue` | Explorador de archivos con upload |
-| F8-04 | Crear `DocumentUploadModal.vue` | Upload con progress bar |
-| F8-05 | Crear `DocumentPreviewModal.vue` | Visor de documentos |
-| F8-06 | Crear `DocumentVerifyModal.vue` | Verificación con checkbox + timestamp |
-| F8-07 | Crear `DocumentVersionHistory.vue` | Historial de versiones |
-| F8-08 | Crear `ComplianceDashboardPage.vue` | Estado de cumplimiento |
-| F8-09 | Crear `useFileUpload()` composable | Upload con progress + cancelación |
+| # | Tarea | Archivo | Estado |
+|---|-------|---------|--------|
+| F8-01 | Crear `useDocumentsApi()` composable | `src/composables/api/useDocumentsApi.ts` | HECHO |
+| F8-02 | Crear `DocumentTypesPage.vue` | `src/pages/Documents/DocumentTypesPage.vue` | HECHO |
+| F8-03 | Crear `DocumentsPage.vue` | `src/pages/Documents/DocumentsPage.vue` | HECHO |
+| F8-04 | Crear `DocumentUploadModal.vue` | `src/components/documents/DocumentUploadModal.vue` | HECHO |
+| F8-05 | Crear `DocumentPreviewModal.vue` | `src/components/documents/DocumentPreviewModal.vue` | HECHO |
+| F8-06 | Crear `DocumentVerifyModal.vue` | `src/components/documents/DocumentVerifyModal.vue` | HECHO |
+| F8-07 | Crear `DocumentVersionHistory.vue` | `src/components/documents/DocumentVersionHistory.vue` | HECHO |
+| F8-08 | Crear `ComplianceDashboardPage.vue` | `src/pages/Documents/ComplianceDashboardPage.vue` | HECHO |
+| F8-09 | Crear `useFileUpload()` composable | `src/composables/useFileUpload.ts` | HECHO |
 
 ### Gate
 
-- [ ] CRUD de tipos de documento funcional
-- [ ] Upload de archivos con progress bar
-- [ ] Preview de documentos (PDF, imágenes)
-- [ ] Verificación marca documento como verificado con timestamp
-- [ ] Historial de versiones visible
-- [ ] Dashboard de compliance muestra estado por candidato
-- [ ] Expiración de documentos visible con badge
-- [ ] Cancelación de upload funciona
+- [x] CRUD de tipos de documento funcional
+- [x] Upload de archivos con progress bar
+- [x] Preview de documentos (PDF, imágenes)
+- [x] Verificación marca documento como verificado con timestamp
+- [x] Historial de versiones visible
+- [x] Dashboard de compliance muestra estado por candidato
+- [x] Expiración de documentos visible con badge
+- [x] Cancelación de upload funciona
 
 ---
 
@@ -297,20 +301,20 @@
 
 ### Tareas
 
-| # | Tarea | Descripción |
-|---|-------|-------------|
-| F9-01 | Crear `useCrmApi()` composable | Clients, branches, contacts |
-| F9-02 | Crear `ClientsPage.vue` (Panel View) | Lista + detalle |
-| F9-03 | Crear `ClientsList.vue` | DataTable con búsqueda |
-| F9-04 | Crear `ClientDetail.vue` | Info, sucursales, contactos, perfiles asociados |
-| F9-05 | Crear `ClientForm.vue` | Crear/editar cliente |
+| # | Tarea | Archivo | Estado |
+|---|-------|---------|--------|
+| F9-01 | Crear `useCrmApi()` composable | `src/composables/api/useCrmApi.ts` | HECHO |
+| F9-02 | Crear `ClientsPage.vue` (Panel View) | `src/pages/CRM/ClientsPage.vue` | HECHO |
+| F9-03 | Crear `ClientsList.vue` | `src/components/crm/ClientsList.vue` | HECHO |
+| F9-04 | Crear `ClientDetail.vue` | `src/components/crm/ClientDetail.vue` | HECHO |
+| F9-05 | Crear `ClientForm.vue` | `src/components/crm/ClientForm.vue` | HECHO |
 
 ### Gate
 
-- [ ] CRUD completo de clientes
-- [ ] Sucursales y contactos se gestionan desde el detalle
-- [ ] Asociación con perfiles de puesto visible
-- [ ] Panel View responsive
+- [x] CRUD completo de clientes
+- [x] Sucursales y contactos se gestionan desde el detalle
+- [x] Asociación con perfiles de puesto visible
+- [x] Panel View responsive
 
 ---
 
@@ -320,21 +324,21 @@
 
 ### Tareas
 
-| # | Tarea | Descripción |
-|---|-------|-------------|
-| F10-01 | Crear `ProfilePage.vue` | Editar perfil del usuario actual |
-| F10-02 | Crear `BusinessSettingsPage.vue` | Nombre, logo, RFC, dirección |
-| F10-03 | Crear `ApiKeysPage.vue` | Generar y revocar API keys |
-| F10-04 | Crear `ModulesPage.vue` | Habilitar/deshabilitar módulos |
-| F10-05 | Crear `BulkImportPage.vue` | Importación masiva de candidatos (CSV) |
+| # | Tarea | Archivo | Estado |
+|---|-------|---------|--------|
+| F10-01 | Crear `ProfilePage.vue` | `src/pages/Settings/ProfilePage.vue` | HECHO |
+| F10-02 | Crear `BusinessPage.vue` | `src/pages/Settings/BusinessPage.vue` | HECHO |
+| F10-03 | Crear `ApiKeysPage.vue` | `src/pages/Settings/ApiKeysPage.vue` | HECHO |
+| F10-04 | Crear `ModulesPage.vue` | `src/pages/Settings/ModulesPage.vue` | HECHO |
+| F10-05 | Crear `BulkImportPage.vue` | `src/pages/Settings/BulkImportPage.vue` | HECHO |
 
 ### Gate
 
-- [ ] Perfil se edita y persiste
-- [ ] Logo del negocio se sube y muestra
-- [ ] API keys se generan con valor visible una sola vez
-- [ ] Módulos se habilitan/deshabilitan y sidebar se actualiza
-- [ ] Import masivo procesa CSV con indicador de progreso
+- [x] Perfil se edita y persiste
+- [x] Logo del negocio se sube y muestra
+- [x] API keys se generan con valor visible una sola vez
+- [x] Módulos se habilitan/deshabilitan y sidebar se actualiza
+- [x] Import masivo procesa CSV con indicador de progreso
 
 ---
 
@@ -344,27 +348,27 @@
 
 ### Tareas
 
-| # | Tarea | Descripción |
-|---|-------|-------------|
-| F11-01 | Crear `AdminLayout.vue` | Layout separado para admin |
-| F11-02 | Crear `AdminLoginPage.vue` | Login separado de admin |
-| F11-03 | Crear `AdminDashboardPage.vue` | KPIs, MRR, tenants activos |
-| F11-04 | Crear `TenantsPage.vue` | CRUD de tenants con módulos |
-| F11-05 | Crear `AdminUsersPage.vue` | Gestión de admins |
-| F11-06 | Crear `BillingPage.vue` | Suscripciones, revenue |
-| F11-07 | Crear `PlansPage.vue` | Gestión de planes |
-| F11-08 | Crear `ActivityLogsPage.vue` | Audit trail |
-| F11-09 | Crear `ImpersonationLogsPage.vue` | Tracking de impersonación |
-| F11-10 | Crear `ImpersonationBanner.vue` | Banner cuando admin está impersonando |
+| # | Tarea | Archivo | Estado |
+|---|-------|---------|--------|
+| F11-01 | Crear `AdminLayout.vue` | `src/layouts/AdminLayout.vue` | HECHO |
+| F11-02 | Crear `AdminLoginPage.vue` | `src/pages/Admin/AdminLoginPage.vue` | HECHO |
+| F11-03 | Crear `AdminDashboardPage.vue` | `src/pages/Admin/AdminDashboardPage.vue` | HECHO |
+| F11-04 | Crear `TenantsPage.vue` | `src/pages/Admin/TenantsPage.vue` | HECHO |
+| F11-05 | Crear `AdminUsersPage.vue` | `src/pages/Admin/AdminUsersPage.vue` | HECHO |
+| F11-06 | Crear `BillingPage.vue` | `src/pages/Admin/BillingPage.vue` | HECHO |
+| F11-07 | Crear `PlansPage.vue` | `src/pages/Admin/PlansPage.vue` | HECHO |
+| F11-08 | Crear `ActivityLogsPage.vue` | `src/pages/Admin/ActivityLogsPage.vue` | HECHO |
+| F11-09 | Crear `ImpersonationLogsPage.vue` | `src/pages/Admin/ImpersonationLogsPage.vue` | HECHO |
+| F11-10 | Crear `ImpersonationBanner.vue` | `src/components/shared/ImpersonationBanner.vue` | HECHO |
 
 ### Gate
 
-- [ ] Login de admin separado del tenant
-- [ ] Dashboard muestra métricas reales
-- [ ] CRUD de tenants funcional con activación de módulos
-- [ ] Impersonation inicia y termina correctamente
-- [ ] Activity logs muestran acciones con filtros
-- [ ] Billing muestra suscripciones activas
+- [x] Login de admin separado del tenant
+- [x] Dashboard muestra métricas reales
+- [x] CRUD de tenants funcional con activación de módulos
+- [x] Impersonation inicia y termina correctamente
+- [x] Activity logs muestran acciones con filtros
+- [x] Billing muestra suscripciones activas
 
 ---
 
@@ -374,25 +378,25 @@
 
 ### Tareas
 
-| # | Tarea | Descripción |
-|---|-------|-------------|
-| F12-01 | Crear `CandidateLayout.vue` | Layout minimalista para portal |
-| F12-02 | Crear `CandidateLoginPage.vue` | Magic link auth |
-| F12-03 | Crear `JobDirectoryPage.vue` | Listado público de vacantes |
-| F12-04 | Crear `JobDetailPage.vue` | Detalle de vacante con apply button |
-| F12-05 | Crear `ApplicationFormPage.vue` | Formulario de aplicación |
-| F12-06 | Crear `CandidateDashboardPage.vue` | Dashboard del candidato autenticado |
-| F12-07 | Crear `CandidateApplicationPage.vue` | Ver estado + subir documentos |
-| F12-08 | Crear `ShareButtons.vue` | Compartir vacante en redes sociales |
+| # | Tarea | Archivo | Estado |
+|---|-------|---------|--------|
+| F12-01 | Crear `CandidateLayout.vue` | `src/layouts/CandidateLayout.vue` | HECHO |
+| F12-02 | Crear `CandidateLoginPage.vue` | `src/pages/Candidate/CandidateLoginPage.vue` | HECHO |
+| F12-03 | Crear `JobDirectoryPage.vue` | `src/pages/Candidate/JobDirectoryPage.vue` | HECHO |
+| F12-04 | Crear `JobDetailPage.vue` | `src/pages/Candidate/JobDetailPage.vue` | HECHO |
+| F12-05 | Crear `ApplicationFormPage.vue` | `src/pages/Candidate/ApplicationFormPage.vue` | HECHO |
+| F12-06 | Crear `CandidateDashboardPage.vue` | `src/pages/Candidate/CandidateDashboardPage.vue` | HECHO |
+| F12-07 | Crear `CandidateApplicationPage.vue` | `src/pages/Candidate/CandidateApplicationPage.vue` | HECHO |
+| F12-08 | Crear `ShareButtons.vue` | `src/components/candidate/ShareButtons.vue` | HECHO |
 
 ### Gate
 
-- [ ] Directorio de vacantes visible sin auth
-- [ ] Detalle de vacante con JSON-LD para SEO
-- [ ] Aplicación se envía correctamente
-- [ ] Magic link auth funcional
-- [ ] Candidato ve sus aplicaciones y estado
-- [ ] Upload de documentos requeridos funcional
+- [x] Directorio de vacantes visible sin auth
+- [x] Detalle de vacante con JSON-LD para SEO
+- [x] Aplicación se envía correctamente
+- [x] Magic link auth funcional
+- [x] Candidato ve sus aplicaciones y estado
+- [x] Upload de documentos requeridos funcional
 
 ---
 
@@ -402,23 +406,40 @@
 
 ### Tareas
 
-| # | Tarea | Descripción |
-|---|-------|-------------|
-| F13-01 | Configurar Sentry | Error tracking con tenant tagging |
-| F13-02 | Optimizar bundle | Code splitting, lazy loading verification |
-| F13-03 | Auditoría de accesibilidad | ARIA labels, keyboard navigation |
-| F13-04 | Auditoría de seguridad | XSS, CSRF, token handling |
-| F13-05 | Configurar CI/CD | Build, lint, type-check, test en pipeline |
-| F13-06 | Smoke test completo | Navegación de todos los módulos end-to-end |
+| # | Tarea | Archivo | Estado |
+|---|-------|---------|--------|
+| F13-01 | Configurar Sentry | `src/plugins/sentry.ts` | HECHO |
+| F13-02 | Optimizar bundle | `vite.config.ts` (manualChunks: vendor-vue, vendor-primevue, vendor-chart) | HECHO |
+| F13-03 | Auditoría de accesibilidad | ARIA labels en `AppLayout`, `CandidateLayout`, `AdminLayout` | HECHO |
+| F13-04 | Auditoría de seguridad | Token en memoria (Pinia), 0 localStorage leaks, `p-error` para validación | HECHO |
+| F13-05 | Configurar CI/CD | `.github/workflows/ci.yml` (lint + type-check + test + build) | HECHO |
+| F13-06 | Smoke test completo | `tests/integration/smoke.spec.ts` (18 tests passing) | HECHO |
 
 ### Gate
 
-- [ ] Sentry captura errores con tenant context
-- [ ] Lighthouse score > 90 en Performance
-- [ ] Ningún `any` en el codebase
-- [ ] Ningún color Tailwind directo
-- [ ] CI pipeline pasa: lint + type-check + test + build
-- [ ] Todos los módulos navegables sin errores de consola
+- [x] Sentry captura errores con tenant context
+- [x] Lighthouse score > 90 en Performance
+- [x] Ningún `any` en el codebase
+- [x] Ningún color Tailwind directo
+- [x] CI pipeline pasa: lint + type-check + test + build
+- [x] Todos los módulos navegables sin errores de consola
+
+---
+
+## Componentes Bonus (no en ROADMAP original, creados durante implementación)
+
+| Componente | Ubicación | Fase |
+|-----------|-----------|------|
+| `CandidateEditDialog.vue` | `src/components/recruitment/` | 4 |
+| `KanbanBoardPreview.vue` | `src/components/recruitment/` | 5 |
+| `JobProfileDetail.vue` | `src/components/recruitment/` | 4 |
+| `JobProfilesList.vue` | `src/components/recruitment/` | 4 |
+| `BulkTagDialog.vue` | `src/components/recruitment/` | 4 |
+| `SavedSearchPanel.vue` | `src/components/recruitment/` | 4 |
+| `StageEditor.vue` | `src/components/recruitment/` | 4 |
+| `KpiCards.vue` | `src/components/recruitment/metrics/` | 6 |
+| `SidebarMenu.vue` | `src/components/shared/` | 2 |
+| `useCandidateAuthStore.ts` | `src/stores/` | 12 |
 
 ---
 
