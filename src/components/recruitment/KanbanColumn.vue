@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import draggable from 'vuedraggable'
+import KanbanCard from './KanbanCard.vue'
 import type { PipelineApplication } from '@/types/recruitment'
 
 interface Props {
@@ -54,25 +55,7 @@ function onDragEnd(evt: unknown) {
       @end="onDragEnd"
     >
       <template #item="{ element }">
-        <div
-          class="mb-2 cursor-grab rounded-lg border border-surface bg-surface-0 p-3 transition-shadow hover:shadow-md active:cursor-grabbing dark:bg-surface-900"
-          @click="emit('select', element)"
-        >
-          <p class="text-sm font-medium text-color">{{ element.candidateName }}</p>
-          <div class="mt-0.5 flex items-center gap-2 text-xs text-muted-color">
-            <span><i class="pi pi-clock mr-0.5 text-[10px]" />{{ element.daysInStage }}d</span>
-            <span v-if="element.score !== null"><i class="pi pi-star mr-0.5 text-[10px]" />{{ element.score }}</span>
-            <span v-if="element.totalDays > 0" class="ml-auto">{{ element.totalDays }}d total</span>
-          </div>
-          <div v-if="element.tags.length" class="mt-1.5 flex flex-wrap gap-1">
-            <span
-              v-for="tag in element.tags"
-              :key="tag.id"
-              class="rounded-full px-1.5 py-0.5 text-[10px] font-medium"
-              :style="{ backgroundColor: tag.color + '20', color: tag.color }"
-            >{{ tag.name }}</span>
-          </div>
-        </div>
+        <KanbanCard :application="element" @click="emit('select', element)" />
       </template>
     </draggable>
 
