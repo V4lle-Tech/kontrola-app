@@ -5,6 +5,9 @@ import viteConfig from './vite.config'
 export default mergeConfig(
   viteConfig,
   defineConfig({
+    define: {
+      'import.meta.env.VITE_API_BASE_URL': JSON.stringify('http://localhost:5000/api/v1'),
+    },
     test: {
       environment: 'jsdom',
       root: fileURLToPath(new URL('./', import.meta.url)),
