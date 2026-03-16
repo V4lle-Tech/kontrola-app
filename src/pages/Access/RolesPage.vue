@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import Dialog from 'primevue/dialog'
 import AppLayout from '@/layouts/AppLayout.vue'
 import RolesList from '@/components/access/RolesList.vue'
 import RoleDetail from '@/components/access/RoleDetail.vue'
+import RoleForm from '@/components/access/RoleForm.vue'
 import type { Role } from '@/types/access'
 
 const selectedRole = ref<Role | null>(null)
 const listKey = ref(0)
+const showFormDialog = ref(false)
+const editingRole = ref<Role | null>(null)
 
 const showDetail = computed(() => selectedRole.value !== null)
 
@@ -16,6 +20,22 @@ function selectRole(role: Role) {
 
 function clearSelection() {
   selectedRole.value = null
+}
+
+function openCreate() {
+  editingRole.value = null
+  showFormDialog.value = true
+}
+
+function openEdit(role: Role) {
+  editingRole.value = role
+  showFormDialog.value = true
+}
+
+function onRoleSaved(role: Role) {
+  showFormDialog.value = false
+  listKey.value++
+  selectedRole.value = role
 }
 
 function onRoleDeleted() {
@@ -36,6 +56,7 @@ function onRoleDeleted() {
           :key="listKey"
           :selected-id="selectedRole?.id ?? null"
           @select="selectRole"
+          @create="openCreate"
         />
       </div>
 
@@ -44,6 +65,7 @@ function onRoleDeleted() {
         <RoleDetail
           :role="selectedRole"
           @back="clearSelection"
+          @edit="openEdit"
           @deleted="onRoleDeleted"
         />
       </div>
@@ -56,5 +78,20 @@ function onRoleDeleted() {
         </div>
       </div>
     </div>
+
+    <!-- Create/Edit role dialog -->
+    <Dialog
+      v-model:visible="showFormDialog"
+      modal
+      :header="editingRole ? 'Editar Rol' : 'Nuevo Rol'"
+      class="w-full max-w-2xl"
+    >
+      <RoleForm
+        :key="editingRole?.id ?? 'new'"
+        :role="editingRole"
+        @saved="onRoleSaved"
+        @cancel="showFormDialog = false"
+      />
+    </Dialog>
   </AppLayout>
 </template>
