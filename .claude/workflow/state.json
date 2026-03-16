@@ -1,7 +1,7 @@
 {
   "currentPhase": 6,
   "currentTask": null,
-  "completedTasks": [],
+  "completedTasks": ["F6-01"],
   "activeFeature": null,
   "checkpoint": null,
   "gateResults": {

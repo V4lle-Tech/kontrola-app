@@ -11,6 +11,7 @@ import router from './router'
 
 import 'primeicons/primeicons.css'
 import './assets/main.css'
+import './utils/chartjs'
 
 const app = createApp(App)
 
