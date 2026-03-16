@@ -243,9 +243,48 @@ const adminRoutes: RouteRecordRaw[] = [
   },
 ]
 
+const candidateRoutes: RouteRecordRaw[] = [
+  {
+    path: '/portal/login',
+    name: 'candidate.login',
+    component: () => import('@/pages/Candidate/CandidateLoginPage.vue'),
+    meta: { layout: 'candidate', requiresAuth: false },
+  },
+  {
+    path: '/portal/vacantes',
+    name: 'candidate.jobs',
+    component: () => import('@/pages/Candidate/JobDirectoryPage.vue'),
+    meta: { layout: 'candidate', requiresAuth: false },
+  },
+  {
+    path: '/portal/vacantes/:slug',
+    name: 'candidate.job-detail',
+    component: () => import('@/pages/Candidate/JobDetailPage.vue'),
+    meta: { layout: 'candidate', requiresAuth: false },
+  },
+  {
+    path: '/portal/vacantes/:slug/aplicar',
+    name: 'candidate.apply',
+    component: () => import('@/pages/Candidate/ApplicationFormPage.vue'),
+    meta: { layout: 'candidate', requiresAuth: false },
+  },
+  {
+    path: '/portal/mis-aplicaciones',
+    name: 'candidate.dashboard',
+    component: () => import('@/pages/Candidate/CandidateDashboardPage.vue'),
+    meta: { layout: 'candidate', requiresCandidateAuth: true },
+  },
+  {
+    path: '/portal/mis-aplicaciones/:id',
+    name: 'candidate.application',
+    component: () => import('@/pages/Candidate/CandidateApplicationPage.vue'),
+    meta: { layout: 'candidate', requiresCandidateAuth: true },
+  },
+]
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [...guestRoutes, ...appRoutes, ...adminRoutes],
+  routes: [...guestRoutes, ...appRoutes, ...adminRoutes, ...candidateRoutes],
 })
 
 // Auth guard — redirects based on authentication state
