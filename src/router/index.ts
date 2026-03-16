@@ -110,6 +110,12 @@ const appRoutes: RouteRecordRaw[] = [
     component: () => import('@/pages/Recruitment/SyndicationSettingsPage.vue'),
     meta: { requiresAuth: true, permission: 'syndication.manage' },
   },
+  {
+    path: '/recruitment/meta-callback',
+    name: 'meta-callback',
+    component: () => import('@/pages/Recruitment/MetaCallbackPage.vue'),
+    meta: { requiresAuth: true, permission: 'syndication.manage' },
+  },
 
   // Documents
   {

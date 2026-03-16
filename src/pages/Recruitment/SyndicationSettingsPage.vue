@@ -42,6 +42,17 @@ function providerIcon(provider: string): string {
   return map[provider] ?? 'pi pi-globe'
 }
 
+function connectMetaOAuth() {
+  const clientId = import.meta.env.VITE_META_APP_ID as string | undefined
+  const redirectUri = `${window.location.origin}/recruitment/meta-callback`
+  if (!clientId) {
+    toast.add({ severity: 'warn', summary: 'Meta App ID no configurado', life: 5000 })
+    return
+  }
+  const url = `https://www.facebook.com/v21.0/dialog/oauth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=pages_manage_posts,pages_read_engagement`
+  window.location.href = url
+}
+
 onMounted(() => { void loadBoards() })
 </script>
 
@@ -92,7 +103,15 @@ onMounted(() => { void loadBoards() })
               </p>
             </div>
 
-            <div class="mt-4 flex justify-end">
+            <div class="mt-4 flex justify-end gap-2">
+              <Button
+                v-if="board.provider === 'meta' && !board.isConnected"
+                label="Conectar Meta"
+                icon="pi pi-facebook"
+                severity="info"
+                size="small"
+                @click="connectMetaOAuth"
+              />
               <Button
                 label="Guardar"
                 icon="pi pi-check"
