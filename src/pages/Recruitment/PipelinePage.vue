@@ -4,7 +4,7 @@ import Select from 'primevue/select'
 import MultiSelect from 'primevue/multiselect'
 import Button from 'primevue/button'
 import AppLayout from '@/layouts/AppLayout.vue'
-import KanbanBoardPreview from '@/components/recruitment/KanbanBoardPreview.vue'
+import KanbanBoard from '@/components/recruitment/KanbanBoard.vue'
 import { useRecruitmentApi } from '@/composables/api/useRecruitmentApi'
 import type { Vacancy, Tag, PipelineBoard } from '@/types/recruitment'
 
@@ -100,7 +100,7 @@ onMounted(() => { void loadVacancies(); void api.getTags('candidate').then((t) =
         <div v-else-if="loadingBoard" class="flex h-full items-center justify-center">
           <i class="pi pi-spin pi-spinner text-3xl text-muted-color" />
         </div>
-        <KanbanBoardPreview v-else-if="board" :board="board" :search="filterSearch" :filter-tag-ids="filterTags" />
+        <KanbanBoard v-else-if="board" :board="board" :search="filterSearch" :filter-tag-ids="filterTags" @moved="loadBoard" />
       </div>
     </div>
   </AppLayout>
