@@ -5,6 +5,7 @@ import AppLayout from '@/layouts/AppLayout.vue'
 import JobProfilesList from '@/components/recruitment/JobProfilesList.vue'
 import JobProfileDetail from '@/components/recruitment/JobProfileDetail.vue'
 import JobProfileWizard from '@/components/recruitment/JobProfileWizard.vue'
+import EmptyState from '@/components/shared/EmptyState.vue'
 import type { JobProfile } from '@/types/recruitment'
 
 const selectedProfile = ref<JobProfile | null>(null)
@@ -70,10 +71,7 @@ function openCreate() {
 
       <!-- Estado vacío desktop -->
       <div v-else class="hidden flex-1 items-center justify-center lg:flex">
-        <div class="text-center">
-          <i class="pi pi-briefcase mb-3 text-4xl text-muted-color" />
-          <p class="text-muted-color">Selecciona un perfil de puesto para ver su detalle</p>
-        </div>
+        <EmptyState icon="pi pi-briefcase" title="Selecciona un perfil de puesto para ver su detalle" />
       </div>
     </div>
 

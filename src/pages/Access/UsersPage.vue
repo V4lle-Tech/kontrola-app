@@ -6,6 +6,7 @@ import UsersList from '@/components/access/UsersList.vue'
 import UserDetail from '@/components/access/UserDetail.vue'
 import UserCreate from '@/components/access/UserCreate.vue'
 import UserInvite from '@/components/access/UserInvite.vue'
+import EmptyState from '@/components/shared/EmptyState.vue'
 import type { UserSummary } from '@/types/access'
 
 const selectedUser = ref<UserSummary | null>(null)
@@ -77,10 +78,7 @@ function openCreate() {
 
       <!-- Estado vacío desktop -->
       <div v-else class="hidden flex-1 items-center justify-center lg:flex">
-        <div class="text-center">
-          <i class="pi pi-users mb-3 text-4xl text-muted-color" />
-          <p class="text-muted-color">Selecciona un usuario para ver su detalle</p>
-        </div>
+        <EmptyState icon="pi pi-users" title="Selecciona un usuario para ver su detalle" />
       </div>
     </div>
 

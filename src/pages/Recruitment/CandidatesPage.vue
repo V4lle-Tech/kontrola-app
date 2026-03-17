@@ -5,6 +5,7 @@ import AppLayout from '@/layouts/AppLayout.vue'
 import CandidatesList from '@/components/recruitment/CandidatesList.vue'
 import CandidateDetail from '@/components/recruitment/CandidateDetail.vue'
 import CandidateCreate from '@/components/recruitment/CandidateCreate.vue'
+import EmptyState from '@/components/shared/EmptyState.vue'
 import type { CandidateListItem } from '@/types/recruitment'
 
 const selectedCandidate = ref<CandidateListItem | null>(null)
@@ -70,10 +71,7 @@ function openCreate() {
 
       <!-- Estado vacío desktop -->
       <div v-else class="hidden flex-1 items-center justify-center lg:flex">
-        <div class="text-center">
-          <i class="pi pi-users mb-3 text-4xl text-muted-color" />
-          <p class="text-muted-color">Selecciona un candidato para ver su detalle</p>
-        </div>
+        <EmptyState icon="pi pi-users" title="Selecciona un candidato para ver su detalle" />
       </div>
     </div>
 
