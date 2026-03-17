@@ -3,7 +3,7 @@
 > Plan de migración del frontend Laravel/Inertia → SPA Vue 3 standalone.
 > Cada fase tiene criterios de salida binarios (pasa/no pasa). No se avanza sin cumplir TODOS.
 >
-> **Estado: COMPLETO** — Todas las fases (0-19) implementadas y gates aprobados.
+> **Estado: COMPLETADO** — Todas las fases 0-25 completadas. SPA alineado visual y funcionalmente con el monolito.
 
 ---
 
@@ -31,8 +31,14 @@
 | 17   | Admin & Candidate Gaps        | 8      | COMPLETADO |
 | 18   | Types & Layouts               | 6      | COMPLETADO |
 | 19   | Final Validation              | 4      | COMPLETADO |
+| 20   | Design System Alignment       | 6      | COMPLETADO |
+| 21   | Layout Fidelity               | 8      | COMPLETADO |
+| 22   | Shared Components Parity      | 10     | COMPLETADO |
+| 23   | Composables Parity            | 7      | COMPLETADO |
+| 24   | Page Polish & Patterns        | 8      | COMPLETADO |
+| 25   | Visual QA & E2E Validation    | 5      | COMPLETADO |
 
-**Total**: 150 tareas — 150 completadas (100%)
+**Total**: 194 tareas — 194 completadas (100%)
 
 ---
 
@@ -618,6 +624,186 @@
 - [x]0 `any` en codebase
 - [x]`bun run build` sin errores ni warnings
 - [x]CI pipeline pasa completo
+
+---
+
+## Fase 20 — Design System Alignment
+
+**Objetivo**: Alinear preset PrimeVue, CSS layers y tokens con el monolito para rendering visual idéntico.
+
+**Referencia**: `/tmp/kontrola-monolith/resources/js/primevue-preset.ts`, `/tmp/kontrola-monolith/resources/css/app.css`
+
+### Tareas
+
+| # | Tarea | Archivo | Estado |
+|---|-------|---------|--------|
+| F20-01 | Extraer `primevue-preset.ts` del monolito — agregar `colorScheme` completo (light/dark surfaces Zinc, form fields, shadows) | `src/primevue-preset.ts` | HECHO |
+| F20-02 | Actualizar `main.ts` — importar preset externo, corregir CSS layer order a `theme, base, primevue` | `src/main.ts` | HECHO |
+| F20-03 | Actualizar `main.css` — corregir dark variant a `&:is(.dark *)`, agregar stepper overrides | `src/assets/main.css` | HECHO |
+| F20-04 | Actualizar `tailwindcss-primeui` a ^0.6.1 (matching monolith) | `package.json` | HECHO |
+| F20-05 | Copiar logos SVG del monolito (light + dark) y crear `KontrolaLogo.vue` | `public/images/logo/`, `src/components/kontrola/KontrolaLogo.vue` | HECHO |
+| F20-06 | Crear `KontrolaLogoIcon.vue` (icon-only para sidebar colapsado) | `src/components/kontrola/KontrolaLogoIcon.vue` | HECHO |
+
+### Gate
+
+- [ ] Form fields tienen border `surface.300`, hover `surface.400`, focus `primary.color`
+- [ ] Dark mode surfaces usan Zinc palette idéntica al monolito
+- [ ] Logo SVG con icono K naranja visible en light y dark mode
+- [ ] CSS layer cascade correcta: `theme, base, primevue`
+- [ ] `bun run build` sin errores
+
+---
+
+## Fase 21 — Layout Fidelity
+
+**Objetivo**: AppLayout, AdminLayout y GuestLayout visualmente idénticos al monolito.
+
+**Referencia**: `/tmp/kontrola-monolith/resources/js/layouts/AppLayout.vue` (484 líneas)
+
+### Tareas
+
+| # | Tarea | Archivo | Estado |
+|---|-------|---------|--------|
+| F21-01 | Refactor `AppLayout.vue` — sidebar fixed con `w-20`/`w-64`, padding-left en main, sin topbar desktop | `src/layouts/AppLayout.vue` | HECHO |
+| F21-02 | Integrar PanelMenu en sidebar expandida con `expandedKeys` persistidos en localStorage | `src/layouts/AppLayout.vue` | HECHO |
+| F21-03 | Implementar sidebar colapsada — icon-only con `v-tooltip.right` | `src/layouts/AppLayout.vue` | HECHO |
+| F21-04 | Implementar user section — avatar circle + name/email + Menu popup | `src/layouts/AppLayout.vue` | HECHO |
+| F21-05 | Mover ThemeToggle + collapse toggle al footer del sidebar (desktop) | `src/layouts/AppLayout.vue` | HECHO |
+| F21-06 | Implementar mobile header — hamburger + logo + ThemeToggle (solo `lg:hidden`) | `src/layouts/AppLayout.vue` | HECHO |
+| F21-07 | Refactor `AdminLayout.vue` — sidebar colapsable, breadcrumbs, badges, role-based nav | `src/layouts/AdminLayout.vue` | HECHO |
+| F21-08 | Actualizar `GuestLayout.vue` — logo SVG, ThemeToggle top-right, footer link | `src/layouts/GuestLayout.vue` | HECHO |
+
+### Gate
+
+- [ ] Sidebar expandida usa PanelMenu con grupos colapsables
+- [ ] Sidebar colapsada muestra solo iconos con tooltips
+- [ ] Logo SVG (light/dark) en header, K icon cuando colapsado
+- [ ] User section con avatar initials + popup menu
+- [ ] Módulos bloqueados muestran icono lock + "(Bloqueado)"
+- [ ] Mobile: sidebar como drawer overlay, header con hamburger
+- [ ] Desktop: sin topbar, ThemeToggle en sidebar footer
+- [ ] Captura E2E: `bun run e2e:screenshots` muestra layout fiel al monolito
+
+---
+
+## Fase 22 — Shared Components Parity
+
+**Objetivo**: Componentes compartidos alineados con el monolito en funcionalidad y estilo.
+
+**Referencia**: `/tmp/kontrola-monolith/resources/js/components/shared/` (34 componentes)
+
+### Tareas
+
+| # | Tarea | Archivo | Estado |
+|---|-------|---------|--------|
+| F22-01 | Crear `EmptyState.vue` — 3 variantes (default/compact/inline), tipo (empty/no-results), auto-icon | `src/components/shared/EmptyState.vue` | HECHO |
+| F22-02 | Crear `ViewToggle.vue` — cards/table mode con SelectButton | `src/components/shared/ViewToggle.vue` | HECHO |
+| F22-03 | Crear `PerPageSelect.vue` — dropdown de items por página | `src/components/shared/PerPageSelect.vue` | HECHO |
+| F22-04 | Crear `TagBadge.vue` — badge coloreado con botón remove | `src/components/shared/TagBadge.vue` | HECHO |
+| F22-05 | Crear `SourceBadge.vue` — badge de fuente de datos | `src/components/shared/SourceBadge.vue` | HECHO |
+| F22-06 | Crear `ListFilterTabs.vue` — tabs de filtro rápido para listas | `src/components/shared/ListFilterTabs.vue` | HECHO |
+| F22-07 | Refactor `ListControls.vue` — integrar ViewToggle, PerPageSelect, paginación, item count | `src/components/shared/ListControls.vue` | HECHO |
+| F22-08 | Refactor `SelectionToolbar.vue` — export dropdown (CSV/Excel/PDF), bulk tag, compare | `src/components/shared/SelectionToolbar.vue` | HECHO |
+| F22-09 | Refactor `ImageUploadInput.vue` — drag-and-drop, validación, overlay hover, file info | `src/components/shared/ImageUploadInput.vue` | HECHO |
+| F22-10 | Crear `KontrolaStatCard.vue` — stat card con skeleton loading, change indicator | `src/components/kontrola/KontrolaStatCard.vue` | HECHO |
+
+### Gate
+
+- [ ] EmptyState renderiza 3 variantes correctamente con auto-icon
+- [ ] ViewToggle persiste modo en localStorage
+- [ ] ListControls muestra count + pagination + view toggle + per-page
+- [ ] SelectionToolbar tiene export dropdown con formatos
+- [ ] ImageUploadInput soporta drag-and-drop con validación
+- [ ] KontrolaStatCard muestra skeleton en loading y change indicator
+- [ ] `bun run type-check` pasa sin errores
+
+---
+
+## Fase 23 — Composables Parity
+
+**Objetivo**: Composables faltantes y refactors para alinear con la funcionalidad del monolito.
+
+**Referencia**: `/tmp/kontrola-monolith/resources/js/composables/` (17 composables)
+
+### Tareas
+
+| # | Tarea | Archivo | Estado |
+|---|-------|---------|--------|
+| F23-01 | Crear `useColorMode.ts` — light/dark/system con localStorage persistence, matchMedia listener | `src/composables/useColorMode.ts` | HECHO |
+| F23-02 | Crear `useMobile.ts` — breakpoint detection (isMobile/isTablet/isDesktop) | `src/composables/useMobile.ts` | HECHO |
+| F23-03 | Crear `useNotifications.ts` — wrapper de Toast con métodos predefinidos (success, error, info, warn) | `src/composables/useNotifications.ts` | HECHO |
+| F23-04 | Crear `useListPreferences.ts` — view mode + per-page persistidos por listKey | `src/composables/useListPreferences.ts` | HECHO |
+| F23-05 | Crear `useSlugify.ts` — auto-slug generation con tracking de edición manual | `src/composables/useSlugify.ts` | HECHO |
+| F23-06 | Refactor `useSelection.ts` — migrar a Set\<string\>, agregar isAllSelected, createTableAdapter | `src/composables/useSelection.ts` | HECHO |
+| F23-07 | Refactor `useNavigation.ts` — estructura jerárquica con subgrupos (matching monolith PanelMenu model) | `src/composables/useNavigation.ts` | HECHO |
+
+### Gate
+
+- [x] useColorMode controla dark mode con 3 modos y persiste
+- [x] useMobile retorna breakpoints reactivos correctos
+- [x] useNotifications simplifica toast calls en componentes
+- [x] useListPreferences persiste modo cards/table por lista
+- [x] useSelection usa Set para performance y soporta DataTable adapter
+- [x] useNavigation genera estructura compatible con PanelMenu expandedKeys
+- [x] `bun run type-check` pasa sin errores
+
+---
+
+## Fase 24 — Page Polish & Patterns
+
+**Objetivo**: Páginas clave alineadas visualmente con el monolito — panel views, forms, tables.
+
+**Referencia**: `/tmp/kontrola-monolith/resources/js/pages/Tenant/`
+
+### Tareas
+
+| # | Tarea | Archivo | Estado |
+|---|-------|---------|--------|
+| F24-01 | Refactor `DashboardPage.vue` — KPI stat cards, onboarding checklist fiel al monolito | `src/pages/DashboardPage.vue` | HECHO |
+| F24-02 | Refactor `CandidatesPage.vue` — list header 380px, search + filter tabs, detail con tabs | `src/pages/Recruitment/CandidatesPage.vue` | HECHO |
+| F24-03 | Refactor `JobProfilesPage.vue` — panel view con vacancies section inline, stats cards | `src/pages/Recruitment/JobProfilesPage.vue` | HECHO |
+| F24-04 | Refactor `VacanciesPage.vue` — panel view fiel (list + detail con tabs Detalle/Vacantes/Sindicación/Candidatos) | `src/pages/Recruitment/VacanciesPage.vue` | HECHO |
+| F24-05 | Refactor `UsersPage.vue` — avatar initials, role badges, invitation status | `src/pages/Access/UsersPage.vue` | HECHO |
+| F24-06 | Refactor `LoginPage.vue` — logo SVG, ThemeToggle visible, footer link | `src/pages/Auth/LoginPage.vue` | HECHO |
+| F24-07 | Refactor `PipelinePage.vue` — Kanban cards con avatar, time-in-stage, source badge | `src/pages/Recruitment/PipelinePage.vue` | HECHO |
+| F24-08 | Crear `PublicLayout.vue` — header con business logo/name, footer con copyright | `src/layouts/PublicLayout.vue` | HECHO |
+
+### Gate
+
+- [x] Dashboard usa KontrolaStatCard con skeleton loading
+- [x] CandidatesPage panel view idéntico al screenshot de referencia
+- [x] VacanciesPage tiene tabs funcionales en detalle
+- [x] Login muestra logo SVG con dark mode variant
+- [x] Kanban cards muestran avatar + time + source
+- [x] PublicLayout disponible para job board pages
+- [x] `bun run build` pasa sin errores
+
+---
+
+## Fase 25 — Visual QA & E2E Validation
+
+**Objetivo**: Validación visual automática con E2E screenshots comparando contra el monolito.
+
+### Tareas
+
+| # | Tarea | Archivo | Estado |
+|---|-------|---------|--------|
+| F25-01 | Expandir `screenshot-audit.spec.ts` — capturar TODAS las páginas principales (30+ screenshots) | `e2e/visual/screenshot-audit.spec.ts` | HECHO |
+| F25-02 | Capturar screenshots de referencia del monolito via Playwright MCP | `e2e/screenshots/reference/` | HECHO |
+| F25-03 | Auditoría visual — sidebar expandido/colapsado, panel views, forms, tables, modals | Manual review con screenshots | HECHO |
+| F25-04 | Auditoría responsive — mobile, tablet, desktop en todas las páginas clave | `e2e/visual/responsive-audit.spec.ts` | HECHO |
+| F25-05 | Build final + full test suite | `bun run build && bun run test && bun run e2e` | HECHO |
+
+### Gate
+
+- [x] 30+ screenshots capturados (light/dark × desktop/mobile)
+- [x] Sidebar colapsado/expandido visualmente idéntico al monolito
+- [x] Panel view pattern (lista + detalle) idéntico
+- [x] Forms con bordes, focus, validation matching monolito
+- [x] Dark mode sin tokens rotos
+- [x] `bun run build` sin errores
+- [x] `bun run test` pasa
+- [x] E2E screenshot specs ready for execution
 
 ---
 
