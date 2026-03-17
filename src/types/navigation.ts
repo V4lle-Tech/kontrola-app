@@ -1,12 +1,8 @@
-export interface MenuItem {
-  label: string
-  icon: string
-  to?: string
-  permission?: string
-  children?: MenuItem[]
-}
+import type { MenuItem } from 'primevue/menuitem'
 
-export interface MenuSection {
-  label: string
-  items: MenuItem[]
+export interface SidebarMenuItem extends MenuItem {
+  to?: string
+  locked?: boolean
+  module?: string
+  items?: SidebarMenuItem[]
 }
