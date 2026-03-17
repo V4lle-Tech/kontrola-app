@@ -12,6 +12,10 @@
     "format": "prettier --write src/",
     "test": "vitest run",
     "test:watch": "vitest",
+    "e2e": "playwright test",
+    "e2e:ui": "playwright test --ui",
+    "e2e:screenshots": "playwright test e2e/visual/ --reporter=list",
+    "e2e:report": "playwright show-report e2e/report",
     "api:generate": "openapi-typescript-codegen --input ${OPENAPI_SPEC_URL:-https://api.kontrola.com.mx/swagger/v1/swagger.json} --output src/api/generated --client axios --useOptions --useUnionTypes"
   },
   "dependencies": {
@@ -30,6 +34,7 @@
   "devDependencies": {
     "@eslint/js": "^9.22.0",
     "@pinia/testing": "^1.0.3",
+    "@playwright/test": "^1.58.2",
     "@tailwindcss/vite": "^4.1.4",
     "@tsconfig/node22": "^22.0.1",
     "@types/node": "^22.13.14",
