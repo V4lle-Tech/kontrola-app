@@ -27,6 +27,12 @@ const guestRoutes: RouteRecordRaw[] = [
     component: () => import('@/pages/Auth/ResetPasswordPage.vue'),
     meta: { layout: 'guest', requiresAuth: false },
   },
+  {
+    path: '/accept-invitation',
+    name: 'accept-invitation',
+    component: () => import('@/pages/Auth/AcceptInvitationPage.vue'),
+    meta: { layout: 'guest', requiresAuth: false },
+  },
 ]
 
 const appRoutes: RouteRecordRaw[] = [
@@ -284,7 +290,18 @@ const candidateRoutes: RouteRecordRaw[] = [
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [...guestRoutes, ...appRoutes, ...adminRoutes, ...candidateRoutes],
+  routes: [
+    ...guestRoutes,
+    ...appRoutes,
+    ...adminRoutes,
+    ...candidateRoutes,
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: () => import('@/pages/NotFoundPage.vue'),
+      meta: { requiresAuth: true },
+    },
+  ],
 })
 
 // Auth guard — redirects based on authentication state
