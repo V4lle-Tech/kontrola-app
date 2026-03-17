@@ -49,11 +49,22 @@ describe('Smoke test — all routes resolve', () => {
     expect(routeNames).toContain('admin.dashboard')
     expect(routeNames).toContain('admin.tenants')
     expect(routeNames).toContain('admin.billing')
+    expect(routeNames).toContain('admin.modules')
+    expect(routeNames).toContain('admin.reports')
+    expect(routeNames).toContain('admin.system-health')
 
     // Candidate Portal
     expect(routeNames).toContain('candidate.jobs')
     expect(routeNames).toContain('candidate.login')
     expect(routeNames).toContain('candidate.dashboard')
+    expect(routeNames).toContain('candidate.check-email')
+    expect(routeNames).toContain('candidate.link-expired')
+    expect(routeNames).toContain('candidate.application-success')
+
+    // Phase 15-16 additions
+    expect(routeNames).toContain('accept-invitation')
+    expect(routeNames).toContain('job-profile-templates')
+    expect(routeNames).toContain('not-found')
   })
 
   it('should resolve each route without errors', async () => {
