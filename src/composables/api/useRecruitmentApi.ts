@@ -27,6 +27,9 @@ import type {
   CreateApplicationNoteRequest,
   SkipStageRequest,
   CreateSkipStageRequest,
+  JobProfileTemplate,
+  CreateJobProfileTemplateRequest,
+  UpdateJobProfileTemplateRequest,
 } from '@/types/recruitment'
 
 export interface CandidateFilters extends PaginationParams {
@@ -229,6 +232,49 @@ export function useRecruitmentApi() {
     await apiClient.post(`/skip-requests/${id}/reject`)
   }
 
+  // ── Candidate ↔ Job Profile associations ──────────────────────────
+
+  async function associateCandidateToJobProfiles(candidateId: string, jobProfileIds: string[]): Promise<void> {
+    await apiClient.post(`/candidates/${candidateId}/job-profiles`, { jobProfileIds })
+  }
+
+  async function addCandidatesToJobProfile(jobProfileId: string, candidateIds: string[]): Promise<void> {
+    await apiClient.post(`/job-profiles/${jobProfileId}/candidates`, { candidateIds })
+  }
+
+  async function inviteCandidates(jobProfileId: string, emails: string[], message?: string): Promise<void> {
+    await apiClient.post(`/job-profiles/${jobProfileId}/invite`, { emails, message })
+  }
+
+  // ── Job Profile Templates ────────────────────────────────────────
+
+  async function getJobProfileTemplates(params?: PaginationParams): Promise<PaginatedResponse<JobProfileTemplate>> {
+    const { data } = await apiClient.get<PaginatedResponse<JobProfileTemplate>>('/job-profile-templates', { params })
+    return data
+  }
+
+  async function getJobProfileTemplate(id: string): Promise<JobProfileTemplate> {
+    const { data } = await apiClient.get<JobProfileTemplate>(`/job-profile-templates/${id}`)
+    return data
+  }
+
+  async function createJobProfileTemplate(request: CreateJobProfileTemplateRequest): Promise<JobProfileTemplate> {
+    const id = generateId()
+    const { data } = await apiClient.put<JobProfileTemplate>(`/job-profile-templates/${id}`, request)
+    return data
+  }
+
+  async function updateJobProfileTemplate(id: string, request: UpdateJobProfileTemplateRequest): Promise<JobProfileTemplate> {
+    const { data } = await apiClient.put<JobProfileTemplate>(`/job-profile-templates/${id}`, request)
+    return data
+  }
+
+  async function deleteJobProfileTemplate(id: string): Promise<void> {
+    await apiClient.delete(`/job-profile-templates/${id}`)
+  }
+
+  // ── Active Vacancies ──────────────────────────────────────────────
+
   async function getActiveVacancies(): Promise<Vacancy[]> {
     const { data } = await apiClient.get<Vacancy[]>('/vacancies', { params: { status: 'published', pageSize: 100 } })
     return (data as unknown as PaginatedResponse<Vacancy>).items
@@ -268,6 +314,16 @@ export function useRecruitmentApi() {
     bulkRemoveTags,
     // Applications
     getCandidateApplications,
+    // Candidate ↔ Job Profile
+    associateCandidateToJobProfiles,
+    addCandidatesToJobProfile,
+    inviteCandidates,
+    // Job Profile Templates
+    getJobProfileTemplates,
+    getJobProfileTemplate,
+    createJobProfileTemplate,
+    updateJobProfileTemplate,
+    deleteJobProfileTemplate,
     // Pipeline
     getPipelineBoard,
     moveApplication,

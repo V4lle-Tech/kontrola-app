@@ -60,3 +60,10 @@ export interface VerifyDocumentRequest {
   status: 'verified' | 'rejected'
   notes?: string
 }
+
+export interface ValidationConfig {
+  maxSizeBytes: number
+  allowedExtensions: string[]
+  requiresExpiration: boolean
+  requiresVerification: boolean
+}

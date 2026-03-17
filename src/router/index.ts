@@ -122,6 +122,12 @@ const appRoutes: RouteRecordRaw[] = [
     component: () => import('@/pages/Recruitment/MetaCallbackPage.vue'),
     meta: { requiresAuth: true, permission: 'syndication.manage' },
   },
+  {
+    path: '/recruitment/job-profile-templates',
+    name: 'job-profile-templates',
+    component: () => import('@/pages/Recruitment/JobProfileTemplatesPage.vue'),
+    meta: { requiresAuth: true, permission: 'job-profiles.view' },
+  },
 
   // Documents
   {

@@ -240,6 +240,30 @@ export interface CreateSkipStageRequest {
   reason: string
 }
 
+// — Job Profile Templates —
+export interface JobProfileTemplate {
+  id: string
+  name: string
+  description: string | null
+  employmentType: EmploymentType
+  requirements: string[]
+  functions: string[]
+  benefits: string[]
+  createdAt: string
+  updatedAt: string
+}
+
+export interface CreateJobProfileTemplateRequest {
+  name: string
+  description?: string
+  employmentType: EmploymentType
+  requirements?: string[]
+  functions?: string[]
+  benefits?: string[]
+}
+
+export type UpdateJobProfileTemplateRequest = CreateJobProfileTemplateRequest
+
 // — Tags —
 export interface Tag {
   id: string
