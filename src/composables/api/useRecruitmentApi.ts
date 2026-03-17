@@ -228,8 +228,8 @@ export function useRecruitmentApi() {
     await apiClient.post(`/skip-requests/${id}/approve`)
   }
 
-  async function rejectSkipRequest(id: string): Promise<void> {
-    await apiClient.post(`/skip-requests/${id}/reject`)
+  async function rejectSkipRequest(id: string, reason?: string): Promise<void> {
+    await apiClient.post(`/skip-requests/${id}/reject`, reason ? { reason } : undefined)
   }
 
   // ── Candidate ↔ Job Profile associations ──────────────────────────

@@ -253,6 +253,24 @@ const adminRoutes: RouteRecordRaw[] = [
     component: () => import('@/pages/Admin/ImpersonationLogsPage.vue'),
     meta: { layout: 'admin', requiresAuth: true, requiresAdmin: true },
   },
+  {
+    path: '/admin/modules',
+    name: 'admin.modules',
+    component: () => import('@/pages/Admin/AdminModulesPage.vue'),
+    meta: { layout: 'admin', requiresAuth: true, requiresAdmin: true },
+  },
+  {
+    path: '/admin/reports',
+    name: 'admin.reports',
+    component: () => import('@/pages/Admin/AdminReportsPage.vue'),
+    meta: { layout: 'admin', requiresAuth: true, requiresAdmin: true },
+  },
+  {
+    path: '/admin/system-health',
+    name: 'admin.system-health',
+    component: () => import('@/pages/Admin/SystemHealthPage.vue'),
+    meta: { layout: 'admin', requiresAuth: true, requiresAdmin: true },
+  },
 ]
 
 const candidateRoutes: RouteRecordRaw[] = [
@@ -291,6 +309,24 @@ const candidateRoutes: RouteRecordRaw[] = [
     name: 'candidate.application',
     component: () => import('@/pages/Candidate/CandidateApplicationPage.vue'),
     meta: { layout: 'candidate', requiresCandidateAuth: true },
+  },
+  {
+    path: '/portal/check-email',
+    name: 'candidate.check-email',
+    component: () => import('@/pages/Candidate/CheckEmailPage.vue'),
+    meta: { layout: 'candidate', requiresAuth: false },
+  },
+  {
+    path: '/portal/link-expired',
+    name: 'candidate.link-expired',
+    component: () => import('@/pages/Candidate/LinkExpiredPage.vue'),
+    meta: { layout: 'candidate', requiresAuth: false },
+  },
+  {
+    path: '/portal/aplicacion-exitosa',
+    name: 'candidate.application-success',
+    component: () => import('@/pages/Candidate/ApplicationSuccessPage.vue'),
+    meta: { layout: 'candidate', requiresAuth: false },
   },
 ]
 
