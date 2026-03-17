@@ -6,6 +6,7 @@ import { useToast } from 'primevue/usetoast'
 import { useAccessApi } from '@/composables/api/useAccessApi'
 import type { UserSummary } from '@/types/access'
 import type { ApiError } from '@/types/api'
+import { usePermissions } from '@/composables/usePermissions'
 
 interface Props {
   user: UserSummary
@@ -20,6 +21,7 @@ const emit = defineEmits<{
 
 const api = useAccessApi()
 const toast = useToast()
+const { can } = usePermissions()
 const detail = ref<UserSummary>(props.user)
 const loading = ref(false)
 
@@ -101,6 +103,7 @@ void loadDetail()
       />
       <h2 class="flex-1 text-lg font-semibold text-color">{{ detail.fullName }}</h2>
       <Button
+        v-if="can('users.update')"
         :icon="detail.isActive ? 'pi pi-ban' : 'pi pi-check'"
         :label="detail.isActive ? 'Desactivar' : 'Activar'"
         :severity="detail.isActive ? 'warn' : 'success'"
@@ -109,6 +112,7 @@ void loadDetail()
         @click="toggleActive"
       />
       <Button
+        v-if="can('users.delete')"
         icon="pi pi-trash"
         severity="danger"
         text

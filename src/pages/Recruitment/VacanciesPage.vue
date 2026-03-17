@@ -12,9 +12,11 @@ import { useRecruitmentApi } from '@/composables/api/useRecruitmentApi'
 import type { Vacancy, VacancyStatus } from '@/types/recruitment'
 import type { PaginatedResponse } from '@/types/pagination'
 import type { ApiError } from '@/types/api'
+import { usePermissions } from '@/composables/usePermissions'
 
 const api = useRecruitmentApi()
 const toast = useToast()
+const { can } = usePermissions()
 
 const data = ref<PaginatedResponse<Vacancy> | null>(null)
 const loading = ref(false)
@@ -233,7 +235,7 @@ onMounted(() => {
             <template #body="{ data: vacancy }">
               <div class="flex gap-1">
                 <Button
-                  v-if="vacancy.status === 'draft'"
+                  v-if="vacancy.status === 'draft' && can('vacancies.update')"
                   v-tooltip.top="'Publicar'"
                   icon="pi pi-play"
                   text
@@ -242,7 +244,7 @@ onMounted(() => {
                   @click="updateStatus(vacancy, 'published')"
                 />
                 <Button
-                  v-if="vacancy.status === 'published'"
+                  v-if="vacancy.status === 'published' && can('vacancies.update')"
                   v-tooltip.top="'Pausar'"
                   icon="pi pi-pause"
                   text
@@ -251,7 +253,7 @@ onMounted(() => {
                   @click="updateStatus(vacancy, 'paused')"
                 />
                 <Button
-                  v-if="vacancy.status === 'paused'"
+                  v-if="vacancy.status === 'paused' && can('vacancies.update')"
                   v-tooltip.top="'Reanudar'"
                   icon="pi pi-play"
                   text
@@ -260,7 +262,7 @@ onMounted(() => {
                   @click="updateStatus(vacancy, 'published')"
                 />
                 <Button
-                  v-if="vacancy.status === 'published' || vacancy.status === 'paused'"
+                  v-if="(vacancy.status === 'published' || vacancy.status === 'paused') && can('vacancies.update')"
                   v-tooltip.top="'Cerrar'"
                   icon="pi pi-times-circle"
                   text
@@ -269,6 +271,7 @@ onMounted(() => {
                   @click="updateStatus(vacancy, 'closed')"
                 />
                 <Button
+                  v-if="can('vacancies.delete')"
                   v-tooltip.top="'Eliminar'"
                   icon="pi pi-trash"
                   text

@@ -6,6 +6,7 @@ import { useToast } from 'primevue/usetoast'
 import { useRecruitmentApi } from '@/composables/api/useRecruitmentApi'
 import type { JobProfile, JobProfileStatus } from '@/types/recruitment'
 import type { ApiError } from '@/types/api'
+import { usePermissions } from '@/composables/usePermissions'
 
 interface Props {
   profile: JobProfile
@@ -20,6 +21,7 @@ const emit = defineEmits<{
 
 const api = useRecruitmentApi()
 const toast = useToast()
+const { can } = usePermissions()
 const detail = ref<JobProfile>(props.profile)
 const loading = ref(false)
 
@@ -138,7 +140,7 @@ void loadDetail()
       />
       <h2 class="flex-1 truncate text-lg font-semibold text-color">{{ detail.title }}</h2>
       <Button
-        v-if="detail.status === 'draft'"
+        v-if="detail.status === 'draft' && can('job-profiles.update')"
         icon="pi pi-check"
         label="Activar"
         severity="success"
@@ -146,7 +148,7 @@ void loadDetail()
         @click="changeStatus('active')"
       />
       <Button
-        v-if="detail.status === 'active'"
+        v-if="detail.status === 'active' && can('job-profiles.update')"
         icon="pi pi-box"
         label="Archivar"
         severity="warn"
@@ -154,7 +156,7 @@ void loadDetail()
         @click="changeStatus('archived')"
       />
       <Button
-        v-if="detail.status === 'archived'"
+        v-if="detail.status === 'archived' && can('job-profiles.update')"
         icon="pi pi-replay"
         label="Reactivar"
         severity="info"
@@ -162,6 +164,7 @@ void loadDetail()
         @click="changeStatus('active')"
       />
       <Button
+        v-if="can('job-profiles.delete')"
         icon="pi pi-trash"
         severity="danger"
         text

@@ -13,6 +13,7 @@ import { useRecruitmentApi } from '@/composables/api/useRecruitmentApi'
 import type { Candidate, CandidateListItem, Application } from '@/types/recruitment'
 import type { ApiError } from '@/types/api'
 import { sourceLabel, sourceSeverity } from '@/utils/candidateLabels'
+import { usePermissions } from '@/composables/usePermissions'
 
 interface Props {
   candidate: CandidateListItem
@@ -27,6 +28,7 @@ const emit = defineEmits<{
 
 const api = useRecruitmentApi()
 const toast = useToast()
+const { can } = usePermissions()
 const detail = ref<Candidate | null>(null)
 const applications = ref<Application[]>([])
 const loading = ref(false)
@@ -100,8 +102,8 @@ void loadDetail()
       <h2 class="flex-1 truncate text-lg font-semibold text-color">
         {{ detail?.fullName ?? candidate.fullName }}
       </h2>
-      <Button icon="pi pi-pencil" severity="secondary" text size="small" @click="showEditDialog = true" />
-      <Button icon="pi pi-trash" severity="danger" text size="small" @click="deleteCandidate" />
+      <Button v-if="can('candidates.update')" icon="pi pi-pencil" severity="secondary" text size="small" @click="showEditDialog = true" />
+      <Button v-if="can('candidates.delete')" icon="pi pi-trash" severity="danger" text size="small" @click="deleteCandidate" />
     </div>
 
     <!-- Content -->
