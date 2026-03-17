@@ -1,9 +1,20 @@
 @import '@fontsource-variable/instrument-sans';
 @import 'tailwindcss';
-@plugin 'tailwindcss-primeui';
+@import 'tailwindcss-primeui';
 
-@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant dark (&:is(.dark *));
 
-@theme {
+@theme inline {
   --font-sans: 'Instrument Sans Variable', ui-sans-serif, system-ui, sans-serif;
+}
+
+/* PrimeVue Stepper: completed step styling */
+[data-p~='completed'] .p-step-number {
+  background-color: var(--p-primary-color);
+  border-color: var(--p-primary-color);
+  color: var(--p-primary-contrast-color);
+}
+
+[data-p~='completed'] .p-step-title {
+  color: var(--p-primary-color);
 }
