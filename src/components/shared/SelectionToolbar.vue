@@ -1,70 +1,119 @@
 <script setup lang="ts">
 import Button from 'primevue/button'
+import Menu from 'primevue/menu'
+import { computed, ref } from 'vue'
 
-interface ActionDef {
-  label: string
-  icon: string
-  severity?: string
-  event: string
-}
+export type ExportFormat = 'csv' | 'excel' | 'pdf'
 
 interface Props {
-  count: number
-  actions?: ActionDef[]
+  selectedCount: number
+  entityName: string
+  canDelete?: boolean
+  canExport?: boolean
+  canTag?: boolean
+  canCompare?: boolean
+  isDeleting?: boolean
+  isExporting?: boolean
+  isComparing?: boolean
+  minCompare?: number
+  maxCompare?: number
 }
-withDefaults(defineProps<Props>(), {
-  actions: () => [],
+
+const props = withDefaults(defineProps<Props>(), {
+  canDelete: true,
+  canExport: true,
+  canTag: false,
+  canCompare: false,
+  isDeleting: false,
+  isExporting: false,
+  isComparing: false,
+  minCompare: 2,
+  maxCompare: 4,
 })
 
 const emit = defineEmits<{
+  delete: []
+  export: [format: ExportFormat]
+  tag: []
+  compare: []
   clear: []
-  action: [event: string]
 }>()
+
+const exportMenu = ref()
+const exportMenuItems = ref([
+  { label: 'CSV', icon: 'pi pi-file', command: () => emit('export', 'csv') },
+  { label: 'Excel', icon: 'pi pi-file-excel', command: () => emit('export', 'excel') },
+  { label: 'PDF', icon: 'pi pi-file-pdf', command: () => emit('export', 'pdf') },
+])
+
+function toggleExportMenu(event: Event) {
+  exportMenu.value.toggle(event)
+}
+
+const canCompareSelection = computed(() => {
+  return props.selectedCount >= props.minCompare && props.selectedCount <= props.maxCompare
+})
+
+const compareTooltip = computed(() => {
+  if (props.selectedCount < props.minCompare) {
+    return `Selecciona al menos ${props.minCompare} para comparar`
+  }
+  if (props.selectedCount > props.maxCompare) {
+    return `Máximo ${props.maxCompare} para comparar`
+  }
+  return 'Comparar seleccionados'
+})
 </script>
 
 <template>
-  <Transition name="slide-up">
-    <div
-      v-if="count > 0"
-      class="absolute right-0 bottom-4 left-0 z-10 mx-auto flex w-fit items-center gap-3 rounded-xl border border-surface bg-surface-0 px-4 py-2 shadow-lg dark:bg-surface-900"
-    >
-      <span class="text-sm font-medium text-color">
-        {{ count }} seleccionado{{ count !== 1 ? 's' : '' }}
+  <div class="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-lg border border-primary/20 bg-surface-100 p-3 dark:bg-surface-800">
+    <div class="flex shrink-0 items-center gap-3">
+      <span class="text-sm font-medium text-primary">
+        {{ selectedCount }} {{ entityName }}{{ selectedCount !== 1 ? 's' : '' }} seleccionado{{ selectedCount !== 1 ? 's' : '' }}
       </span>
-      <div class="flex items-center gap-1">
-        <Button
-          v-for="action in actions"
-          :key="action.event"
-          :label="action.label"
-          :icon="action.icon"
-          :severity="(action.severity as 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast') ?? 'secondary'"
-          size="small"
-          text
-          @click="emit('action', action.event)"
-        />
-        <Button
-          icon="pi pi-times"
-          severity="secondary"
-          size="small"
-          text
-          rounded
-          title="Limpiar selección"
-          @click="emit('clear')"
-        />
-      </div>
+      <Button type="button" label="Limpiar" icon="pi pi-times" text size="small" class="!text-sm" @click="emit('clear')" />
     </div>
-  </Transition>
+
+    <div class="flex shrink-0 items-center gap-2">
+      <template v-if="canExport">
+        <Button
+          type="button"
+          :label="isExporting ? 'Exportando...' : 'Exportar'"
+          icon="pi pi-download"
+          severity="secondary"
+          outlined
+          size="small"
+          :disabled="isExporting"
+          @click="toggleExportMenu"
+        />
+        <Menu ref="exportMenu" :model="exportMenuItems" popup />
+      </template>
+
+      <Button v-if="canTag" type="button" label="Etiquetar" icon="pi pi-tag" severity="secondary" outlined size="small" @click="emit('tag')" />
+
+      <Button
+        v-if="canCompare"
+        type="button"
+        :label="isComparing ? 'Comparando...' : 'Comparar'"
+        icon="pi pi-arrow-right-arrow-left"
+        severity="secondary"
+        outlined
+        size="small"
+        :disabled="!canCompareSelection || isComparing"
+        :title="compareTooltip"
+        @click="emit('compare')"
+      />
+
+      <Button
+        v-if="canDelete"
+        type="button"
+        :label="isDeleting ? 'Eliminando...' : 'Eliminar'"
+        icon="pi pi-trash"
+        severity="danger"
+        size="small"
+        :disabled="isDeleting"
+        @click="emit('delete')"
+      />
+    </div>
+  </div>
 </template>
-
-<style scoped>
-.slide-up-enter-active,
-.slide-up-leave-active {
-  transition: all 0.2s ease;
-}
-
-.slide-up-enter-from,
-.slide-up-leave-to {
-  opacity: 0;
-  transform: translateY(1rem);
-}
-</style>
