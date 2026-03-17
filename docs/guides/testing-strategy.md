@@ -12,7 +12,43 @@
 | Component   | Vitest + @vue/test-utils  | Componentes aislados con props/events       | < 200ms   | 20%      |
 | Integration | Vitest + MSW              | Flujos completos con API mock               | < 500ms   | 10%      |
 
-> **Sin E2E en este repositorio.** Los tests E2E viven en `kontrola-net` como Pest Browser Tests ejecutados contra el backend real.
+> **E2E frontend** con Playwright — captura screenshots para análisis AI de UX/UI. Los tests E2E de integración completa viven en `kontrola-net` (Pest Browser Tests contra backend real).
+
+### E2E (Playwright)
+
+| Nivel | Herramienta | Qué testa | Velocidad | Cantidad |
+| ----- | ----------- | --------- | --------- | -------- |
+| E2E   | Playwright  | Navegación, formularios, visual audit con screenshots | < 5s | Por flujo |
+
+```
+e2e/
+├── fixtures/
+│   └── base.ts              # Custom fixtures: screenshot helpers
+├── helpers/
+│   └── auth.ts              # Login helpers + API mocks
+├── auth/
+│   └── login.spec.ts        # Login page E2E tests
+├── visual/
+│   └── screenshot-audit.spec.ts  # Visual audit para AI analysis
+├── screenshots/              # (gitignored) Output de capturas
+├── results/                  # (gitignored) Test artifacts
+└── report/                   # (gitignored) HTML report
+```
+
+**Comandos E2E:**
+
+```bash
+bun run e2e                # Ejecutar todos los E2E
+bun run e2e:ui             # UI interactiva de Playwright
+bun run e2e:screenshots    # Solo visual audit (screenshots)
+bun run e2e:report         # Abrir reporte HTML
+```
+
+**AI-driven UX workflow:**
+
+1. `bun run e2e:screenshots` captura todas las páginas en light/dark + responsive
+2. Playwright MCP (vision mode) analiza screenshots en tiempo real
+3. Claude lee los screenshots de `e2e/screenshots/` para sugerir mejoras UX/UI
 
 ---
 
