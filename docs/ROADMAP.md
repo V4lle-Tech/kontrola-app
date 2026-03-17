@@ -3,7 +3,7 @@
 > Plan de migración del frontend Laravel/Inertia → SPA Vue 3 standalone.
 > Cada fase tiene criterios de salida binarios (pasa/no pasa). No se avanza sin cumplir TODOS.
 >
-> **Estado: EN PROGRESO** — Fases 0-13 completadas. Fases 14-19 añadidas tras validación contra repo original.
+> **Estado: COMPLETO** — Todas las fases (0-19) implementadas y gates aprobados.
 
 ---
 
@@ -25,14 +25,14 @@
 | 11   | Admin Panel                   | 10     | COMPLETADO |
 | 12   | Candidate Portal              | 8      | COMPLETADO |
 | 13   | Polish & Production           | 6      | COMPLETADO |
-| 14   | Shared Components & Composables | 10   | PENDIENTE  |
-| 15   | Auth & Access Gaps            | 7      | PENDIENTE  |
-| 16   | Recruitment Gaps              | 8      | PENDIENTE  |
-| 17   | Admin & Candidate Gaps        | 8      | PENDIENTE  |
-| 18   | Types & Layouts               | 6      | PENDIENTE  |
-| 19   | Final Validation              | 4      | PENDIENTE  |
+| 14   | Shared Components & Composables | 10   | COMPLETADO |
+| 15   | Auth & Access Gaps            | 7      | COMPLETADO |
+| 16   | Recruitment Gaps              | 8      | COMPLETADO |
+| 17   | Admin & Candidate Gaps        | 8      | COMPLETADO |
+| 18   | Types & Layouts               | 6      | COMPLETADO |
+| 19   | Final Validation              | 4      | COMPLETADO |
 
-**Total**: 150 tareas — 107 completadas (71%)
+**Total**: 150 tareas — 150 completadas (100%)
 
 ---
 
@@ -470,13 +470,13 @@
 
 ### Gate
 
-- [ ] `DeleteConfirmDialog` se usa en al menos 3 módulos (candidates, roles, documents)
-- [ ] `StatusBadge` renderiza severities correctas
-- [ ] `useListPage` reduce boilerplate en páginas con DataTable
-- [ ] `useSelection` funciona con bulk tag y bulk delete
-- [ ] `useUnsavedChanges` bloquea navegación con cambios pendientes
-- [ ] `bun run type-check` pasa sin errores
-- [ ] `bun run lint` pasa sin warnings
+- [x]`DeleteConfirmDialog` se usa en al menos 3 módulos (candidates, roles, documents)
+- [x]`StatusBadge` renderiza severities correctas
+- [x]`useListPage` reduce boilerplate en páginas con DataTable
+- [x]`useSelection` funciona con bulk tag y bulk delete
+- [x]`useUnsavedChanges` bloquea navegación con cambios pendientes
+- [x]`bun run type-check` pasa sin errores
+- [x]`bun run lint` pasa sin warnings
 
 ---
 
@@ -498,14 +498,14 @@
 
 ### Gate
 
-- [ ] AcceptInvitation recibe token por URL, muestra form, completa registro
-- [ ] UserEdit permite editar nombre/email/estado del usuario
-- [ ] UserRoles asigna/revoca roles con persist en API
-- [ ] InvitationsList muestra invitaciones con acciones resend/revoke
-- [ ] `useModules` controla visibilidad de rutas y menú
-- [ ] 404 page captura rutas inexistentes
-- [ ] `bun run type-check` pasa sin errores
-- [ ] `bun run lint` pasa sin warnings
+- [x]AcceptInvitation recibe token por URL, muestra form, completa registro
+- [x]UserEdit permite editar nombre/email/estado del usuario
+- [x]UserRoles asigna/revoca roles con persist en API
+- [x]InvitationsList muestra invitaciones con acciones resend/revoke
+- [x]`useModules` controla visibilidad de rutas y menú
+- [x]404 page captura rutas inexistentes
+- [x]`bun run type-check` pasa sin errores
+- [x]`bun run lint` pasa sin warnings
 
 ---
 
@@ -528,15 +528,15 @@
 
 ### Gate
 
-- [ ] CandidateHistoryTab muestra timeline completa de eventos
-- [ ] AssociateToJobProfilesModal vincula candidato a perfil(es)
-- [ ] AddCandidatesModal busca y agrega candidatos a perfil
-- [ ] VacanciesSection permite CRUD de vacantes desde el perfil
-- [ ] QuestionsForm crea/edita preguntas de screening
-- [ ] JobProfileTemplatesPage CRUD completo con DataTable
-- [ ] ValidationConfigForm configura max_size, extensions, expiration
-- [ ] `bun run type-check` pasa sin errores
-- [ ] `bun run lint` pasa sin warnings
+- [x]CandidateHistoryTab muestra timeline completa de eventos
+- [x]AssociateToJobProfilesModal vincula candidato a perfil(es)
+- [x]AddCandidatesModal busca y agrega candidatos a perfil
+- [x]VacanciesSection permite CRUD de vacantes desde el perfil
+- [x]QuestionsForm crea/edita preguntas de screening
+- [x]JobProfileTemplatesPage CRUD completo con DataTable
+- [x]ValidationConfigForm configura max_size, extensions, expiration
+- [x]`bun run type-check` pasa sin errores
+- [x]`bun run lint` pasa sin warnings
 
 ---
 
@@ -559,16 +559,16 @@
 
 ### Gate
 
-- [ ] AdminModulesPage CRUD completo funcional
-- [ ] AdminReportsPage muestra gráficas de crecimiento y revenue
-- [ ] SystemHealthPage lista failed jobs con retry/delete
-- [ ] CandidateGuestLayout se usa en login, check-email, link-expired
-- [ ] CheckEmailPage muestra mensaje apropiado post magic link
-- [ ] LinkExpiredPage ofrece reenvío de link
-- [ ] DenySkipModal captura motivo de rechazo
-- [ ] ApplicationSuccessPage muestra confirmación
-- [ ] `bun run type-check` pasa sin errores
-- [ ] `bun run lint` pasa sin warnings
+- [x]AdminModulesPage CRUD completo funcional
+- [x]AdminReportsPage muestra gráficas de crecimiento y revenue
+- [x]SystemHealthPage lista failed jobs con retry/delete
+- [x]CandidateGuestLayout se usa en login, check-email, link-expired
+- [x]CheckEmailPage muestra mensaje apropiado post magic link
+- [x]LinkExpiredPage ofrece reenvío de link
+- [x]DenySkipModal captura motivo de rechazo
+- [x]ApplicationSuccessPage muestra confirmación
+- [x]`bun run type-check` pasa sin errores
+- [x]`bun run lint` pasa sin warnings
 
 ---
 
@@ -589,11 +589,11 @@
 
 ### Gate
 
-- [ ] Todos los tipos nuevos importados y usados sin `any`
-- [ ] Permission gates visibles en candidates, roles, documents, job profiles
-- [ ] Todas las rutas nuevas registradas y navegables
-- [ ] `bun run type-check` pasa sin errores
-- [ ] `bun run lint` pasa sin warnings
+- [x]Todos los tipos nuevos importados y usados sin `any`
+- [x]Permission gates visibles en candidates, roles, documents, job profiles
+- [x]Todas las rutas nuevas registradas y navegables
+- [x]`bun run type-check` pasa sin errores
+- [x]`bun run lint` pasa sin warnings
 
 ---
 
@@ -612,12 +612,12 @@
 
 ### Gate
 
-- [ ] Smoke tests cubren todas las rutas (originales + nuevas)
-- [ ] 0 violaciones de F07 (colores directos)
-- [ ] 0 violaciones de F01 (axios en componentes)
-- [ ] 0 `any` en codebase
-- [ ] `bun run build` sin errores ni warnings
-- [ ] CI pipeline pasa completo
+- [x]Smoke tests cubren todas las rutas (originales + nuevas)
+- [x]0 violaciones de F07 (colores directos)
+- [x]0 violaciones de F01 (axios en componentes)
+- [x]0 `any` en codebase
+- [x]`bun run build` sin errores ni warnings
+- [x]CI pipeline pasa completo
 
 ---
 
